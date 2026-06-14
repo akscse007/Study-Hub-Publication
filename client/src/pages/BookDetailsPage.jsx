@@ -1,0 +1,167 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaStar, FaWhatsapp } from "react-icons/fa";
+import { bookApi } from "../services/api";
+import { fadeUp, viewportConfig } from "../components/motion";
+import { useSettings } from "../context/SettingsContext";
+import { buildWhatsAppUrl, trackWhatsAppLead } from "../utils/whatsappLead";
+
+const EXCLUDED_DETAIL_FIELDS = new Set([
+  "_id",
+  "__v",
+  "isbn",
+  "image",
+  "searchCount",
+  "isActive",
+  "isFeatured",
+  "isBestSeller",
+  "createdAt",
+  "updatedAt",
+]);
+
+const EXPLICITLY_RENDERED_FIELDS = ["title", "author", "rating", "description"];
+
+const isValidDisplayValue = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string" && value.trim() === "") return false;
+  return true;
+};
+
+const formatFieldLabel = (key) =>
+  key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+
+const renderFieldValue = (key, value) => {
+  if (key === "price") return `₹${value}`;
+  if (Array.isArray(value)) return value.join(", ");
+  return String(value);
+};
+
+const badgeStyle = {
+  display: "inline-block",
+  fontSize: "0.65rem",
+  fontWeight: 700,
+  padding: "3px 10px",
+  borderRadius: "999px",
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+};
+
+const bestSellerBadgeStyle = {
+  ...badgeStyle,
+  background: "#9f1e1e",
+  color: "#ffefdc",
+};
+
+const featuredBadgeStyle = {
+  ...badgeStyle,
+  background: "#5d4311",
+  color: "#f7e5c5",
+};
+
+const BookDetailsPage = () => {
+  const { id } = useParams();
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const settings = useSettings();
+
+  useEffect(() => {
+    const loadBook = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await bookApi.getBookById(id);
+        setBook(data);
+      } catch (err) {
+        setError(err.message || "Could not fetch book details");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBook();
+  }, [id]);
+
+  if (loading) {
+    return <p className="status-text">Loading book details...</p>;
+  }
+
+  if (error) {
+    return <p className="status-text error">{error}</p>;
+  }
+
+  if (!book) {
+    return <p className="status-text error">Book not found.</p>;
+  }
+
+  const message = `Hello I am interested in the book ${book.title}`;
+  const whatsappUrl = buildWhatsAppUrl({ whatsappNumber: settings.whatsappNumber, message });
+
+  const handleWhatsAppClick = (e) => {
+    trackWhatsAppLead({ whatsappNumber: settings.whatsappNumber, book, source: "Book Details" });
+    const newWindow = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    if (newWindow) {
+      e.preventDefault();
+    }
+  };
+
+  const detailFields = Object.entries(book).filter(([key, value]) => {
+    if (EXCLUDED_DETAIL_FIELDS.has(key)) return false;
+    if (EXPLICITLY_RENDERED_FIELDS.includes(key)) return false;
+    return isValidDisplayValue(value);
+  });
+
+  return (
+    <motion.section
+      className="section"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportConfig}
+    >
+      <div className="container details-layout">
+        <div className="details-image-wrap">
+          <img src={book.image} alt={book.title} className="details-image" />
+        </div>
+        <article className="details-card">
+          <h1>{book.title}</h1>
+          {(book.isBestSeller || book.isFeatured) && (
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
+              {book.isBestSeller === true && (
+                <span style={bestSellerBadgeStyle}>Best Seller</span>
+              )}
+              {book.isFeatured === true && (
+                <span style={featuredBadgeStyle}>Featured</span>
+              )}
+            </div>
+          )}
+          {isValidDisplayValue(book.author) && (
+            <p className="book-author">Author: {book.author}</p>
+          )}
+          {isValidDisplayValue(book.rating) && (
+            <p className="book-rating">
+              <FaStar /> {Number(book.rating).toFixed(1)}
+            </p>
+          )}
+          {isValidDisplayValue(book.description) && (
+            <p className="book-description">{book.description}</p>
+          )}
+          {detailFields.length > 0 && (
+            <ul className="detail-list">
+              {detailFields.map(([key, value]) => (
+                <li key={key}>
+                  <strong>{formatFieldLabel(key)}:</strong> {renderFieldValue(key, value)}
+                </li>
+              ))}
+            </ul>
+          )}
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn-primary" onClick={handleWhatsAppClick}>
+            <FaWhatsapp /> Enquire on WhatsApp
+          </a>
+        </article>
+      </div>
+    </motion.section>
+  );
+};
+
+export default BookDetailsPage;
