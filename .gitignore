@@ -90,7 +90,7 @@ coverage/
 # =========================
 *.bak
 *.orig
-
+client/.vite/
 # =========================
 # Uploads / Generated Assets
 # =========================

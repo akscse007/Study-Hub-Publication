@@ -4,17 +4,29 @@ import { FaPhoneAlt, FaWhatsapp, FaEnvelope, FaMapMarkerAlt } from "react-icons/
 import { fadeUp, viewportConfig } from "../components/motion";
 import { useSettings } from "../context/SettingsContext";
 import { formatWhatsAppForLink, formatForDisplay, getGoogleMapsUrls } from "../utils/contactFormatters";
+import { contactApi } from "../services/api";
 
 const ContactPage = () => {
   const settings = useSettings();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
   const { embedUrl } = getGoogleMapsUrls(settings.address);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setForm({ name: "", email: "", message: "" });
+    setStatus("loading");
+    setError("");
+    try {
+      await contactApi.submitContact(form);
+      setSubmitted(true);
+      setForm({ name: "", email: "", message: "" });
+    } catch (err) {
+      setError(err.message || "Failed to send message. Please try again.");
+    } finally {
+      setStatus("idle");
+    }
   };
 
   return (
@@ -82,10 +94,11 @@ const ContactPage = () => {
               onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
             />
 
-            <button type="submit" className="btn-primary">
-              Send Message
+            <button type="submit" className="btn-primary" disabled={status === "loading"}>
+              {status === "loading" ? "Sending..." : "Send Message"}
             </button>
             {submitted ? <p className="success-text">Thank you. We will contact you shortly.</p> : null}
+            {error ? <p className="error-text">{error}</p> : null}
           </form>
         </article>
       </div>

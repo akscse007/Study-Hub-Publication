@@ -1,16 +1,16 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import { verifySmtpConnection } from "./utils/emailService.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import adminRoutes from "./routes/admin/index.js";
 import enquiryRoutes from "./routes/enquiryRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 import whatsappLeadRoutes from "./routes/whatsappLeadRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +31,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/books", bookRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/enquiries", enquiryRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/whatsapp-leads", whatsappLeadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingsRoutes);
@@ -47,12 +48,14 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
+    await verifySmtpConnection();
     await connectDB();
     app.listen(PORT, () => {
       console.log(`Server running at http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to connect to MongoDB:", error.message);
+    console.error("Failed to start server:", error.message);
+    console.error(error.stack);
     process.exit(1);
   }
 };
