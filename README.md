@@ -33,11 +33,11 @@ Other commands:
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `MONGODB_URI` | yes | MongoDB connection string (Atlas or local) |
+| `MONGODB_URI` | yes (production fails to start without it; dev falls back to local MongoDB) | MongoDB connection string (Atlas or local) |
 | `JWT_SECRET` | yes in production | Secret for signing admin JWTs. The server refuses to start in production without it. |
 | `PORT` | no (5000) | API port |
-| `CLIENT_URL` | no | Public site origin, used for CORS and email links |
-| `ADMIN_URL` | no | Additional allowed CORS origin |
+| `CLIENT_URL` | yes in production (server refuses to start without it); dev defaults to `http://localhost:5173` | Public site origin, used for CORS and email links |
+| `ADMIN_URL` | no | Additional allowed CORS origin, only if the admin panel is hosted on a separate origin |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | yes | SMTP credentials for contact/subscriber emails. Server startup verifies the connection. |
 | `ADMIN_EMAIL` | no | Recipient for contact-form notifications (falls back to `SMTP_USER`) |
 | `NODE_ENV` | production only | Set to `production` on the host — enables HSTS and strict JWT secret enforcement |
@@ -48,7 +48,7 @@ Never commit `server/.env`. It is listed in `.gitignore`; if a copy was ever com
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `VITE_API_BASE_URL` | production | Full API base, e.g. `https://api.example.com/api`. Defaults to `http://localhost:5000/api`. |
+| `VITE_API_BASE_URL` | yes in production (a missing value logs a clear console error and API requests fail) | Full API base, e.g. `https://api.example.com/api`. Dev-only default: `http://localhost:5000/api`. Centralized in `client/src/config.js` — the only place a URL fallback exists. |
 
 ## Admin usage
 

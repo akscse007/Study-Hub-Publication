@@ -29,6 +29,12 @@ import { getInventory } from "../../controllers/admin/inventoryController.js";
 import { getContent, updateContent } from "../../controllers/admin/contentController.js";
 import { getActivityLogs } from "../../controllers/admin/activityLogController.js";
 import { getSettings, updateSettings } from "../../controllers/admin/settingsController.js";
+import {
+  getAdminSellers,
+  createAdminSeller,
+  updateAdminSeller,
+  deleteAdminSeller
+} from "../../controllers/admin/sellerController.js";
 import adminUserRoutes from "./adminUserRoutes.js";
 
 const router = express.Router();
@@ -47,6 +53,11 @@ router.get("/announcements", getAnnouncements);
 router.post("/announcements", createAnnouncement);
 router.put("/announcements/:id", updateAnnouncement);
 router.delete("/announcements/:id", deleteAnnouncement);
+
+router.get("/sellers", getAdminSellers);
+router.post("/sellers", createAdminSeller);
+router.put("/sellers/:id", updateAdminSeller);
+router.delete("/sellers/:id", deleteAdminSeller);
 
 router.get("/enquiries", getEnquiries);
 router.patch("/enquiries/:id/status", updateEnquiryStatus);

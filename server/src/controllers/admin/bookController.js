@@ -4,6 +4,11 @@ import { normalizeBookImagesInput, withImages } from "../../utils/bookImages.js"
 import { asString, escapeRegex } from "../../utils/sanitize.js";
 import { broadcastNotification, notifySubscribersAboutBook } from "../notificationController.js";
 
+// Malformed numerics (NaN/null from older documents or buggy clients) otherwise
+// surface as a Mongoose CastError → generic 500.
+const invalidNumericField = (payload) =>
+  ["rating", "price", "stock"].find((key) => payload[key] !== undefined && !Number.isFinite(Number(payload[key])));
+
 export const getAdminBooks = async (req, res, next) => {
   try {
     const { search, category, stockStatus } = req.query;
@@ -46,6 +51,8 @@ export const createAdminBook = async (req, res, next) => {
     if (!payload.images?.length) {
       return res.status(400).json({ message: "At least one valid image URL is required" });
     }
+    const badField = invalidNumericField(payload);
+    if (badField) return res.status(400).json({ message: `Invalid numeric value for ${badField}` });
     const book = await Book.create(payload);
     broadcastNotification("new-book", {
       title: "New book released",
@@ -67,6 +74,8 @@ export const updateAdminBook = async (req, res, next) => {
     if ((payload.images !== undefined || payload.image !== undefined) && !payload.images?.length) {
       return res.status(400).json({ message: "At least one valid image URL is required" });
     }
+    const badField = invalidNumericField(payload);
+    if (badField) return res.status(400).json({ message: `Invalid numeric value for ${badField}` });
     const book = await Book.findByIdAndUpdate(req.params.id, payload, {
       new: true,
       runValidators: true

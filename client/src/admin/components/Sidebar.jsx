@@ -8,7 +8,8 @@ import {
   FaHistory,
   FaCog,
   FaUserShield,
-  FaBookOpen
+  FaBookOpen,
+  FaStore
 } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 
@@ -18,6 +19,7 @@ const baseMenu = [
   { path: "/admin", label: "Dashboard", icon: FaTachometerAlt },
   { path: "/admin/books", label: "Books", icon: FaBook },
   { path: "/admin/announcements", label: "Announcements", icon: FaBullhorn },
+  { path: "/admin/sellers", label: "Seller Information", icon: FaStore },
   { path: "/admin/whatsapp-leads", label: "WhatsApp Leads", icon: FaWhatsapp },
   { path: "/admin/inventory", label: "Inventory", icon: FaBoxes },
   { path: "/admin/activity-logs", label: "Activity Logs", icon: FaHistory }

@@ -98,13 +98,17 @@ const Announcements = () => {
                   </td>
                   <td>
                     <div style={{ display: "flex", gap: "6px" }}>
-                      <button className="btn btn-secondary btn-sm" onClick={() => togglePublish(item)}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        aria-label={item.isPublished ? `Unpublish ${item.title}` : `Publish ${item.title}`}
+                        onClick={() => togglePublish(item)}
+                      >
                         {item.isPublished ? <FaToggleOff /> : <FaToggleOn />}
                       </button>
-                      <button className="btn btn-secondary btn-sm" onClick={() => openEdit(item)}>
+                      <button className="btn btn-secondary btn-sm" aria-label={`Edit ${item.title}`} onClick={() => openEdit(item)}>
                         <FaEdit />
                       </button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(item._id)}>
+                      <button className="btn btn-danger btn-sm" aria-label={`Delete ${item.title}`} onClick={() => handleDelete(item._id)}>
                         <FaTrash />
                       </button>
                     </div>
@@ -128,12 +132,12 @@ const Announcements = () => {
             <form onSubmit={handleSubmit}>
               <div className="modal-body admin-form">
                 <div className="form-group">
-                  <label>Title</label>
-                  <input className="admin-input" name="title" value={values.title} onChange={handleChange} required />
+                  <label htmlFor="announcement-title">Title</label>
+                  <input id="announcement-title" className="admin-input" name="title" value={values.title} onChange={handleChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Content</label>
-                  <textarea className="admin-textarea" name="content" value={values.content} onChange={handleChange} required />
+                  <label htmlFor="announcement-content">Content</label>
+                  <textarea id="announcement-content" className="admin-textarea" name="content" value={values.content} onChange={handleChange} required />
                 </div>
                 <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
                   <input type="checkbox" name="isPublished" checked={values.isPublished} onChange={handleChange} />

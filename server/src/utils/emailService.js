@@ -2,6 +2,10 @@ import nodemailer from "nodemailer";
 
 const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, ADMIN_EMAIL, CLIENT_URL } = process.env;
 
+// Public site URL used in outgoing emails. Localhost fallback is development-only;
+// production requires CLIENT_URL (enforced at startup in index.js).
+const SITE_URL = CLIENT_URL || "http://localhost:5173";
+
 const createTransporter = () => {
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
     console.error("[SMTP] Missing required environment variables. Expected SMTP_HOST, SMTP_USER, SMTP_PASS.");
@@ -93,7 +97,7 @@ export const sendContactNotification = async ({ name, email, message }) => {
 
 export const sendSubscriberConfirmation = async (email) => {
   const subject = "Welcome to Study-Hub Publication notifications";
-  const siteUrl = CLIENT_URL || "http://localhost:5173";
+  const siteUrl = SITE_URL;
   const html = `
     <h2>You are subscribed!</h2>
     <p>Thank you for subscribing to Study-Hub Publication. You will be notified by email whenever a new book is released.</p>
@@ -108,7 +112,7 @@ export const notifySubscribersAboutBook = async (book, subscribers) => {
   if (!subscribers || subscribers.length === 0) return;
 
   const subject = `New release: ${book.title}`;
-  const siteUrl = CLIENT_URL || "http://localhost:5173";
+  const siteUrl = SITE_URL;
   const html = `
     <h2>A new book is available at Study-Hub Publication</h2>
     <p><strong>${escapeHtml(book.title)}</strong> by ${escapeHtml(book.author)} has just been released.</p>

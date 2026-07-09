@@ -12,12 +12,11 @@ import whatsappLeadRoutes from "./routes/whatsappLeadRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import announcementRoutes from "./routes/announcementRoutes.js";
+import sellerRoutes from "./routes/sellerRoutes.js";
 import { createRateLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const ADMIN_URL = process.env.ADMIN_URL || "http://localhost:5174";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 if (!process.env.JWT_SECRET) {
@@ -28,11 +27,22 @@ if (!process.env.JWT_SECRET) {
   console.warn("WARNING: JWT_SECRET is not set — using an insecure development default. Set it in server/.env.");
 }
 
+if (IS_PRODUCTION && !process.env.CLIENT_URL) {
+  console.error(
+    "FATAL: CLIENT_URL is not set. CORS would reject the deployed frontend. Set it to the deployed site URL (e.g. https://your-site.onrender.com)."
+  );
+  process.exit(1);
+}
+
+// Localhost fallbacks apply to local development only; production requires CLIENT_URL (checked above).
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const ADMIN_URL = process.env.ADMIN_URL || ""; // optional: extra CORS origin if the admin panel is hosted separately
+
 app.set("trust proxy", 1); // correct client IPs for rate limiting behind Render/other proxies
 
 app.use(
   cors({
-    origin: [CLIENT_URL, ADMIN_URL]
+    origin: [CLIENT_URL, ADMIN_URL].filter(Boolean)
   })
 );
 
@@ -59,6 +69,7 @@ const publicFormLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 60 
 
 app.use("/api/books", bookRoutes);
 app.use("/api/announcements", announcementRoutes);
+app.use("/api/sellers", sellerRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/enquiries", publicFormLimiter, enquiryRoutes);
 app.use("/api/contact", publicFormLimiter, contactRoutes);
@@ -81,7 +92,7 @@ const startServer = async () => {
     await verifySmtpConnection();
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
+      console.log(`Server listening on port ${PORT}`);
     });
   } catch (error) {
     console.error("Failed to start server:", error.message);

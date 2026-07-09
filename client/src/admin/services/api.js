@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+import { API_BASE_URL } from "../../config";
 
 const getToken = () => localStorage.getItem("sh_token");
 
@@ -46,6 +46,19 @@ export const announcementApi = {
   createAnnouncement: (data) => request("/admin/announcements", { method: "POST", body: JSON.stringify(data) }),
   updateAnnouncement: (id, data) => request(`/admin/announcements/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteAnnouncement: (id) => request(`/admin/announcements/${id}`, { method: "DELETE" })
+};
+
+export const adminSellerApi = {
+  getSellers: (params = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") query.append(key, value);
+    });
+    return request(`/admin/sellers?${query.toString()}`);
+  },
+  createSeller: (data) => request("/admin/sellers", { method: "POST", body: JSON.stringify(data) }),
+  updateSeller: (id, data) => request(`/admin/sellers/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteSeller: (id) => request(`/admin/sellers/${id}`, { method: "DELETE" })
 };
 
 export const enquiryApi = {
