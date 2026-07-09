@@ -9,6 +9,7 @@ Production-ready educational publishing website: React + Vite frontend, Node/Exp
 - **Multiple cover images per book** — books store an `images` array; the first image is the main cover (legacy `image` field stays mirrored for backward compatibility). Book details shows a Swiper slider when a book has more than one image.
 - **Admin panel** at `/admin` — dashboard, books CRUD, inventory, announcements, enquiries, WhatsApp leads, activity logs, settings, admin user management with role hierarchy (`subadmin` < `superadmin` < `developer`).
 - **Dynamic contact email** — the landing page Email buttons open the visitor's default mail client (`mailto:`) addressed to the publication email configured in Admin → Settings. Change the email in settings and every Email button updates automatically; buttons hide when no email is configured.
+- **Live updates & new-book alerts** — the site keeps a Server-Sent Events connection open: the catalogue refreshes automatically when books change, and visitors who granted browser-notification permission get an alert when a new book is published. Visitors can also subscribe by email for release notifications.
 
 ## Run locally
 

@@ -49,6 +49,8 @@ Role hierarchy (rank order): `subadmin` < `superadmin` < `developer` — defined
 
 ### Cross-cutting
 
+- Public write/search endpoints are hardened: user input that reaches Mongo queries must go through `asString`/`escapeRegex` from `server/src/utils/sanitize.js` (bounds strings, blocks NoSQL operator injection, escapes `$regex` metacharacters), and public form/auth routes are rate-limited with `createRateLimiter` from `server/src/middleware/rateLimiter.js` (in-memory fixed-window per IP — per-process only).
+- The public site holds an SSE connection to `/api/notifications/stream` (`client/src/services/notifications.js`, opened in `main.jsx`): `books-updated` events trigger live catalogue refresh, `new-book` events fire browser Notifications. Server side lives in `server/src/controllers/notificationController.js`, which also handles email subscriptions.
 - Admin actions and auth events are recorded via the `ActivityLog` model (`server/src/utils/activityLogger.js`), surfaced in the admin Activity Logs page.
 - Email goes through `server/src/utils/emailService.js` (nodemailer).
 - Site-wide editable settings/content are stored in the `Settings` model and exposed publicly via `/api/settings`, consumed client-side through `SettingsContext`.
