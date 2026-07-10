@@ -41,13 +41,15 @@ const Books = () => {
     setValues({
       title: book.title,
       author: book.author,
-      description: book.description,
+      description: book.description ?? "",
       isbn: book.isbn,
-      rating: book.rating,
+      rating: book.rating ?? "",
       category: book.category,
       imagesText: getBookImages(book).join("\n"),
-      price: book.price,
-      stock: book.stock,
+      // Older documents may lack price/stock; undefined would make the inputs
+      // uncontrolled and submit NaN to the API.
+      price: book.price ?? "",
+      stock: book.stock ?? "",
       isBestSeller: book.isBestSeller,
       isFeatured: book.isFeatured
     });
@@ -70,9 +72,9 @@ const Books = () => {
     const payload = {
       ...rest,
       images,
-      rating: Number(values.rating),
-      price: Number(values.price),
-      stock: Number(values.stock)
+      rating: Number(values.rating) || 0,
+      price: Number(values.price) || 0,
+      stock: Number(values.stock) || 0
     };
     try {
       if (editingBook) {
@@ -141,10 +143,16 @@ const Books = () => {
               type="text"
               className="search-input"
               placeholder="Search title, author, ISBN"
+              aria-label="Search title, author, ISBN"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <select className="admin-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select
+              className="admin-select"
+              aria-label="Filter by category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option value="">All categories</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
@@ -152,7 +160,12 @@ const Books = () => {
                 </option>
               ))}
             </select>
-            <select className="admin-select" value={stockStatus} onChange={(e) => setStockStatus(e.target.value)}>
+            <select
+              className="admin-select"
+              aria-label="Filter by stock status"
+              value={stockStatus}
+              onChange={(e) => setStockStatus(e.target.value)}
+            >
               <option value="">All stock</option>
               <option value="low">Low stock</option>
               <option value="out">Out of stock</option>
@@ -189,10 +202,10 @@ const Books = () => {
                   <td>{book.stock}</td>
                   <td>
                     <div style={{ display: "flex", gap: "6px" }}>
-                      <button className="btn btn-secondary btn-sm" onClick={() => openEdit(book)}>
+                      <button className="btn btn-secondary btn-sm" aria-label={`Edit ${book.title}`} onClick={() => openEdit(book)}>
                         <FaEdit />
                       </button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(book._id)}>
+                      <button className="btn btn-danger btn-sm" aria-label={`Delete ${book.title}`} onClick={() => handleDelete(book._id)}>
                         <FaTrash />
                       </button>
                     </div>
@@ -217,22 +230,23 @@ const Books = () => {
               <div className="modal-body admin-form">
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Title</label>
-                    <input className="admin-input" name="title" value={values.title} onChange={handleChange} required />
+                    <label htmlFor="book-title">Title</label>
+                    <input id="book-title" className="admin-input" name="title" value={values.title} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
-                    <label>Author</label>
-                    <input className="admin-input" name="author" value={values.author} onChange={handleChange} required />
+                    <label htmlFor="book-author">Author</label>
+                    <input id="book-author" className="admin-input" name="author" value={values.author} onChange={handleChange} required />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>ISBN</label>
-                    <input className="admin-input" name="isbn" value={values.isbn} onChange={handleChange} required />
+                    <label htmlFor="book-isbn">ISBN</label>
+                    <input id="book-isbn" className="admin-input" name="isbn" value={values.isbn} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
-                    <label>Rating</label>
+                    <label htmlFor="book-rating">Rating</label>
                     <input
+                      id="book-rating"
                       className="admin-input"
                       type="number"
                       name="rating"
@@ -247,8 +261,8 @@ const Books = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Category</label>
-                    <select className="admin-select" name="category" value={values.category} onChange={handleChange} required>
+                    <label htmlFor="book-category">Category</label>
+                    <select id="book-category" className="admin-select" name="category" value={values.category} onChange={handleChange} required>
                       <option value="">Select</option>
                       {CATEGORIES.map((c) => (
                         <option key={c} value={c}>
@@ -259,8 +273,9 @@ const Books = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Cover Image URLs</label>
+                  <label htmlFor="book-images">Cover Image URLs</label>
                   <textarea
+                    id="book-images"
                     className="admin-textarea"
                     name="imagesText"
                     value={values.imagesText}
@@ -272,17 +287,17 @@ const Books = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Price (₹)</label>
-                    <input className="admin-input" type="number" name="price" min="0" value={values.price} onChange={handleChange} />
+                    <label htmlFor="book-price">Price (₹)</label>
+                    <input id="book-price" className="admin-input" type="number" name="price" min="0" value={values.price} onChange={handleChange} />
                   </div>
                   <div className="form-group">
-                    <label>Stock</label>
-                    <input className="admin-input" type="number" name="stock" min="0" value={values.stock} onChange={handleChange} />
+                    <label htmlFor="book-stock">Stock</label>
+                    <input id="book-stock" className="admin-input" type="number" name="stock" min="0" value={values.stock} onChange={handleChange} />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Description</label>
-                  <textarea className="admin-textarea" name="description" value={values.description} onChange={handleChange} />
+                  <label htmlFor="book-description">Description</label>
+                  <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} />
                 </div>
                 <div className="form-row" style={{ gridTemplateColumns: "repeat(2, minmax(0, auto))", justifyContent: "start" }}>
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>

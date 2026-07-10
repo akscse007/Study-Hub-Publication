@@ -37,11 +37,11 @@ Books support multiple cover images: `images` (array) with legacy `image` kept m
 - `client/src/services/api.js` — public, unauthenticated endpoints
 - `client/src/admin/services/api.js` — admin endpoints; wraps `fetch` with a Bearer token from `localStorage` key `sh_token`, and on any 401 clears the token and hard-redirects to `/admin/login`
 
-`VITE_API_BASE_URL` overrides the API base (defaults to `http://localhost:5000/api`).
+The API base URL is centralized in `client/src/config.js` (exports `API_BASE_URL`): `VITE_API_BASE_URL` when set, otherwise a dev-only localhost fallback (production logs a console error if unset). All client code — both API clients, `AuthContext`, SSE notifications, WhatsApp lead beacon — imports from there; never hardcode an API URL.
 
 ### Server layering
 
-Standard routes → controllers → Mongoose models. Public routes are mounted individually under `/api/*` (`books`, `announcements` — published only, `enquiries`, `contact`, `whatsapp-leads`, `notifications`, `settings`, `auth`). All admin routes are aggregated in `server/src/routes/admin/index.js`, mounted at `/api/admin`, with JWT `authenticate` middleware applied router-wide — individual admin routes only add role checks where needed. Admin controllers live in `server/src/controllers/admin/`, separate from public controllers that may share the same model (e.g. `bookController.js` exists in both).
+Standard routes → controllers → Mongoose models. Public routes are mounted individually under `/api/*` (`books`, `announcements` — published only, `sellers`, `enquiries`, `contact`, `whatsapp-leads`, `notifications`, `settings`, `auth`). All admin routes are aggregated in `server/src/routes/admin/index.js`, mounted at `/api/admin`, with JWT `authenticate` middleware applied router-wide — individual admin routes only add role checks where needed. Admin controllers live in `server/src/controllers/admin/`, separate from public controllers that may share the same model (e.g. `bookController.js` exists in both).
 
 ### Roles and auth
 
@@ -52,5 +52,6 @@ Role hierarchy (rank order): `subadmin` < `superadmin` < `developer` — defined
 - Public write/search endpoints are hardened: user input that reaches Mongo queries must go through `asString`/`escapeRegex` from `server/src/utils/sanitize.js` (bounds strings, blocks NoSQL operator injection, escapes `$regex` metacharacters), and public form/auth routes are rate-limited with `createRateLimiter` from `server/src/middleware/rateLimiter.js` (in-memory fixed-window per IP — per-process only).
 - The public site holds an SSE connection to `/api/notifications/stream` (`client/src/services/notifications.js`, opened in `main.jsx`): `books-updated` events trigger live catalogue refresh, `new-book` events fire browser Notifications. Server side lives in `server/src/controllers/notificationController.js`, which also handles email subscriptions.
 - Admin actions and auth events are recorded via the `ActivityLog` model (`server/src/utils/activityLogger.js`), surfaced in the admin Activity Logs page.
+- Seller information is fully dynamic: the `Seller` model stores a GeoJSON `location` point with a 2dsphere index; `GET /api/sellers?lat=&lng=` (and the admin equivalent) orders results by `$geoNear` proximity via shared helpers in `server/src/utils/sellers.js` (payload validation lives there too). Client-side, geocoding/autocomplete goes through Nominatim (`client/src/utils/geocode.js` + `client/src/components/LocationAutocomplete.jsx`, shared by the public Seller Information page and the admin Sellers page) — searches are debounced 450ms to respect Nominatim's 1 req/s policy.
 - Email goes through `server/src/utils/emailService.js` (nodemailer).
 - Site-wide editable settings/content are stored in the `Settings` model and exposed publicly via `/api/settings`, consumed client-side through `SettingsContext`.

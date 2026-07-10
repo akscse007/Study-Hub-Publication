@@ -1,8 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-if (!API_BASE_URL) {
-  throw new Error("VITE_API_BASE_URL is not configured.");
-}
+import { API_BASE_URL } from "../config";
 
 const buildQueryString = (params = {}) => {
   const searchParams = new URLSearchParams();
@@ -47,6 +43,16 @@ export const announcementApi = {
     const res = await fetch(`${API_BASE_URL}/announcements`);
     if (!res.ok) {
       throw new Error("Failed to fetch announcements");
+    }
+    return res.json();
+  }
+};
+
+export const sellerApi = {
+  async getSellers(params = {}) {
+    const res = await fetch(`${API_BASE_URL}/sellers${buildQueryString(params)}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch seller information");
     }
     return res.json();
   }

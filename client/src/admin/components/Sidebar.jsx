@@ -8,7 +8,8 @@ import {
   FaHistory,
   FaCog,
   FaUserShield,
-  FaBookOpen
+  FaBookOpen,
+  FaStore
 } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 
@@ -18,6 +19,7 @@ const baseMenu = [
   { path: "/admin", label: "Dashboard", icon: FaTachometerAlt },
   { path: "/admin/books", label: "Books", icon: FaBook },
   { path: "/admin/announcements", label: "Announcements", icon: FaBullhorn },
+  { path: "/admin/sellers", label: "Seller Information", icon: FaStore },
   { path: "/admin/whatsapp-leads", label: "WhatsApp Leads", icon: FaWhatsapp },
   { path: "/admin/inventory", label: "Inventory", icon: FaBoxes },
   { path: "/admin/activity-logs", label: "Activity Logs", icon: FaHistory }
@@ -28,7 +30,7 @@ const roleMenu = [
   { path: "/admin/settings", label: "Settings", icon: FaCog, minRole: "developer" }
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ open = false }) => {
   const { role } = useAuth();
   const rank = ROLE_RANK[role] || 0;
 
@@ -38,7 +40,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
+    <aside id="admin-sidebar" className={open ? "sidebar sidebar-open" : "sidebar"}>
       <div className="sidebar-brand">
         <span className="sidebar-brand-icon">
           <FaBookOpen />

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { FaBell, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaBell, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 
-const Header = () => {
+const Header = ({ menuOpen = false, onMenuToggle }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -13,7 +13,19 @@ const Header = () => {
 
   return (
     <header className="admin-header">
-      <h1 className="admin-header-title">Publication Dashboard</h1>
+      <div className="admin-header-left">
+        <button
+          type="button"
+          className="icon-btn admin-menu-btn"
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+          aria-controls="admin-sidebar"
+          onClick={onMenuToggle}
+        >
+          <FaBars />
+        </button>
+        <h1 className="admin-header-title">Publication Dashboard</h1>
+      </div>
       <div className="admin-header-actions">
         <button type="button" className="icon-btn" aria-label="Notifications">
           <FaBell />

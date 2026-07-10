@@ -57,26 +57,28 @@ const Dashboard = () => {
       <div className="admin-card">
         <h3>Recent Activity</h3>
         {data.recentActivity?.length ? (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Action</th>
-                <th>Entity</th>
-                <th>Details</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.recentActivity.map((log) => (
-                <tr key={log._id}>
-                  <td>{log.action}</td>
-                  <td>{log.entity}</td>
-                  <td className="truncate">{log.details}</td>
-                  <td>{formatDate(log.createdAt)}</td>
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>Details</th>
+                  <th>Time</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.recentActivity.map((log) => (
+                  <tr key={log._id}>
+                    <td>{log.action}</td>
+                    <td>{log.entity}</td>
+                    <td className="truncate">{log.details}</td>
+                    <td>{formatDate(log.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p className="empty-state">No recent activity</p>
         )}

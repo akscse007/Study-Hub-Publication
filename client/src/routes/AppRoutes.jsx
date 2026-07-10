@@ -26,6 +26,7 @@ import Inventory from "../admin/pages/Inventory";
 import ActivityLogs from "../admin/pages/ActivityLogs";
 import Settings from "../admin/pages/Settings";
 import AdminUsers from "../admin/pages/AdminUsers";
+import Sellers from "../admin/pages/Sellers";
 
 // Code-split: the landing page ships its own chunk so the main site bundle stays unchanged.
 const LandingPage = lazy(() => import("../pages/LandingPage"));
@@ -68,6 +69,7 @@ const AppRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path="books" element={<Books />} />
         <Route path="announcements" element={<Announcements />} />
+        <Route path="sellers" element={<Sellers />} />
         <Route path="whatsapp-leads" element={<WhatsAppLeads />} />
         <Route path="inventory" element={<Inventory />} />
         <Route path="activity-logs" element={<ActivityLogs />} />
