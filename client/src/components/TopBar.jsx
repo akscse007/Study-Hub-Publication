@@ -1,4 +1,4 @@
-import { FaInstagram, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
+import { FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
 import { useSettings } from "../context/SettingsContext";
 import { formatPhoneForTel, formatWhatsAppForLink } from "../utils/contactFormatters";
 
@@ -20,11 +20,6 @@ const TopBar = () => {
           >
             <FaWhatsapp /> WhatsApp Us
           </a>
-          {settings.instagram ? (
-            <a href={settings.instagram} className="top-bar-link" target="_blank" rel="noreferrer">
-              <FaInstagram /> Instagram
-            </a>
-          ) : null}
         </div>
       </div>
     </div>

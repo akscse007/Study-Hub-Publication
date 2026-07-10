@@ -234,7 +234,8 @@ main {
   padding: 28px 0;
 }
 
-.hero-subtitle {
+/* .hero-slide prefix outranks `.hero-slide p`, which was overriding the badge text color */
+.hero-slide .hero-subtitle {
   margin: 0;
   width: fit-content;
   font-size: 0.7rem;
@@ -1403,6 +1404,29 @@ textarea:focus {
   border: 1px solid #e6d8be;
   border-radius: 999px;
   white-space: nowrap;
+}
+
+/* Mobile only: tighter sizing so more of the table fits before horizontal scroll */
+@media (max-width: 640px) {
+  .seller-table {
+    min-width: 520px;
+    font-size: 0.85rem;
+  }
+
+  .seller-table th {
+    padding: 10px 8px;
+    font-size: 0.72rem;
+  }
+
+  .seller-table td {
+    padding: 10px 8px;
+  }
+
+  .seller-distance {
+    display: flex;
+    width: fit-content;
+    margin: 4px 0 0;
+  }
 }
 
 .seller-contact a {

@@ -30,7 +30,7 @@ const roleMenu = [
   { path: "/admin/settings", label: "Settings", icon: FaCog, minRole: "developer" }
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ open = false }) => {
   const { role } = useAuth();
   const rank = ROLE_RANK[role] || 0;
 
@@ -40,7 +40,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
+    <aside id="admin-sidebar" className={open ? "sidebar sidebar-open" : "sidebar"}>
       <div className="sidebar-brand">
         <span className="sidebar-brand-icon">
           <FaBookOpen />
