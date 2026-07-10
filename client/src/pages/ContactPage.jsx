@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaPhoneAlt, FaWhatsapp, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaWhatsapp, FaMapMarkerAlt } from "react-icons/fa";
+import ContactEmail from "../components/ContactEmail";
 import { fadeUp, viewportConfig } from "../components/motion";
 import { useSettings } from "../context/SettingsContext";
 import { formatWhatsAppForLink, formatForDisplay, getGoogleMapsUrls } from "../utils/contactFormatters";
@@ -46,9 +47,7 @@ const ContactPage = () => {
           <p>
             <FaWhatsapp /> {formatForDisplay(settings.whatsappNumber)}
           </p>
-          <p>
-            <FaEnvelope /> {settings.email}
-          </p>
+          <ContactEmail />
           <p>
             <FaMapMarkerAlt /> {settings.address}
           </p>

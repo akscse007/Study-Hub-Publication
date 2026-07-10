@@ -11,6 +11,7 @@ const defaultSettings = {
   email: "",
   facebook: "",
   instagram: "",
+  youtube: "",
   whatsappNumber: ""
 };
 
@@ -82,6 +83,10 @@ const Settings = () => {
             <div className="form-group">
               <label>Instagram URL</label>
               <input className="admin-input" name="instagram" value={values.instagram || ""} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>YouTube URL</label>
+              <input className="admin-input" name="youtube" value={values.youtube || ""} onChange={handleChange} />
             </div>
           </div>
           <div className="form-actions">

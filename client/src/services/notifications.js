@@ -17,7 +17,7 @@ export const connectNotificationStream = () => {
       if (typeof Notification !== "undefined" && Notification.permission === "granted") {
         new Notification(data.title || "Study-Hub Publication", {
           body: data.message || "A new book has been released.",
-          icon: "/favicon.ico"
+          icon: "/logo.png"
         });
       }
     } catch {

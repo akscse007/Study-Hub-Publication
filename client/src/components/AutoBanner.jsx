@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaPhoneAlt, FaFacebookF, FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import { FaPhoneAlt, FaFacebookF, FaInstagram, FaWhatsapp, FaEnvelope, FaYoutube } from "react-icons/fa";
 import { fadeUp, viewportConfig } from "./motion";
 import { useSettings } from "../context/SettingsContext";
 import { buildContactMailto, formatPhoneForTel, formatWhatsAppForLink } from "../utils/contactFormatters";
@@ -10,6 +10,7 @@ const AutoBanner = () => {
     { label: "Call", href: `tel:${formatPhoneForTel(settings.phone)}`, icon: <FaPhoneAlt /> },
     { label: "Facebook", href: settings.facebook, icon: <FaFacebookF />, external: true },
     { label: "Instagram", href: settings.instagram, icon: <FaInstagram />, external: true },
+    { label: "YouTube", href: settings.youtube, icon: <FaYoutube />, external: true },
     { label: "WhatsApp", href: `https://wa.me/${formatWhatsAppForLink(settings.whatsappNumber)}`, icon: <FaWhatsapp />, external: true },
     // Same compose flow as the landing page; hidden when no email is configured.
     { label: "Email Us", href: buildContactMailto(settings), icon: <FaEnvelope /> }

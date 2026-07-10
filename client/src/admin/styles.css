@@ -67,9 +67,10 @@ button {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--admin-brand);
+  background: #fff;
   color: #f8e9cb;
   font-size: 1.1rem;
+  overflow: hidden;
 }
 
 .admin-login-brand strong {
@@ -161,9 +162,11 @@ button {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--admin-brand-light);
+  background: #fff;
   color: var(--admin-sidebar);
   font-size: 0.9rem;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar-brand strong {

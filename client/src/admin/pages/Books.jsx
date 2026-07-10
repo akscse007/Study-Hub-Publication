@@ -18,7 +18,8 @@ const emptyBook = {
   price: "",
   stock: "",
   isBestSeller: false,
-  isFeatured: false
+  isFeatured: false,
+  isLanding: false
 };
 
 const Books = () => {
@@ -42,7 +43,7 @@ const Books = () => {
       title: book.title,
       author: book.author,
       description: book.description ?? "",
-      isbn: book.isbn,
+      isbn: book.isbn ?? "",
       rating: book.rating ?? "",
       category: book.category,
       imagesText: getBookImages(book).join("\n"),
@@ -51,7 +52,8 @@ const Books = () => {
       price: book.price ?? "",
       stock: book.stock ?? "",
       isBestSeller: book.isBestSeller,
-      isFeatured: book.isFeatured
+      isFeatured: book.isFeatured,
+      isLanding: book.isLanding ?? false
     });
     setIsModalOpen(true);
   };
@@ -115,7 +117,7 @@ const Books = () => {
       !search ||
       book.title.toLowerCase().includes(search.toLowerCase()) ||
       book.author.toLowerCase().includes(search.toLowerCase()) ||
-      book.isbn.toLowerCase().includes(search.toLowerCase());
+      (book.isbn || "").toLowerCase().includes(search.toLowerCase());
     const matchesCategory = !category || book.category === category;
     const matchesStock =
       !stockStatus ||
@@ -240,11 +242,11 @@ const Books = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="book-isbn">ISBN</label>
-                    <input id="book-isbn" className="admin-input" name="isbn" value={values.isbn} onChange={handleChange} required />
+                    <label htmlFor="book-isbn">ISBN (optional)</label>
+                    <input id="book-isbn" className="admin-input" name="isbn" value={values.isbn} onChange={handleChange} />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="book-rating">Rating</label>
+                    <label htmlFor="book-rating">Rating (optional)</label>
                     <input
                       id="book-rating"
                       className="admin-input"
@@ -255,7 +257,6 @@ const Books = () => {
                       step="0.1"
                       value={values.rating}
                       onChange={handleChange}
-                      required
                     />
                   </div>
                 </div>
@@ -288,18 +289,18 @@ const Books = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="book-price">Price (₹)</label>
-                    <input id="book-price" className="admin-input" type="number" name="price" min="0" value={values.price} onChange={handleChange} />
+                    <input id="book-price" className="admin-input" type="number" name="price" min="0" value={values.price} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="book-stock">Stock</label>
+                    <label htmlFor="book-stock">Stock (optional)</label>
                     <input id="book-stock" className="admin-input" type="number" name="stock" min="0" value={values.stock} onChange={handleChange} />
                   </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="book-description">Description</label>
-                  <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} />
+                  <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} required />
                 </div>
-                <div className="form-row" style={{ gridTemplateColumns: "repeat(2, minmax(0, auto))", justifyContent: "start" }}>
+                <div className="form-row" style={{ gridTemplateColumns: "repeat(3, minmax(0, auto))", justifyContent: "start" }}>
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
                     <input type="checkbox" name="isBestSeller" checked={values.isBestSeller} onChange={handleChange} />
                     Best Seller
@@ -307,6 +308,10 @@ const Books = () => {
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
                     <input type="checkbox" name="isFeatured" checked={values.isFeatured} onChange={handleChange} />
                     Featured
+                  </label>
+                  <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
+                    <input type="checkbox" name="isLanding" checked={values.isLanding} onChange={handleChange} />
+                    Landing Page
                   </label>
                 </div>
               </div>

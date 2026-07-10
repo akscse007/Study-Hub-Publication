@@ -28,7 +28,7 @@ import {
 import { getInventory } from "../../controllers/admin/inventoryController.js";
 import { getContent, updateContent } from "../../controllers/admin/contentController.js";
 import { getActivityLogs } from "../../controllers/admin/activityLogController.js";
-import { getSettings, updateSettings } from "../../controllers/admin/settingsController.js";
+import { getSettings, updateSettings, updateReaders } from "../../controllers/admin/settingsController.js";
 import {
   getAdminSellers,
   createAdminSeller,
@@ -76,6 +76,7 @@ router.get("/activity-logs", getActivityLogs);
 
 router.get("/settings", getSettings);
 router.put("/settings", requireRole("developer"), updateSettings);
+router.put("/readers", updateReaders);
 
 router.use("/users", adminUserRoutes);
 

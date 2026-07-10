@@ -6,13 +6,13 @@ import {
   FaBookOpen,
   FaEnvelope,
   FaFacebookF,
-  FaFeatherAlt,
   FaInstagram,
-  FaLayerGroup,
   FaLock,
   FaStar,
-  FaWhatsapp
+  FaWhatsapp,
+  FaYoutube
 } from "react-icons/fa";
+import BrandLogo from "../components/BrandLogo";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 import { useBooks } from "../hooks/useBooks";
 import { fadeUp, staggerContainer } from "../components/motion";
@@ -49,6 +49,7 @@ const SocialLinks = ({ settings, className }) => {
   const links = [
     { key: "facebook", href: settings.facebook, label: "Facebook", icon: <FaFacebookF /> },
     { key: "instagram", href: settings.instagram, label: "Instagram", icon: <FaInstagram /> },
+    { key: "youtube", href: settings.youtube, label: "YouTube", icon: <FaYoutube /> },
     {
       key: "whatsapp",
       href: settings.whatsappNumber ? `https://wa.me/${formatWhatsAppForLink(settings.whatsappNumber)}` : "",
@@ -124,33 +125,9 @@ const LandingContent = () => {
   const settings = useSettings();
   const { books, loading } = useBooks();
 
-  const featuredBooks = useMemo(() => books.filter((book) => book.isFeatured).slice(0, 4), [books]);
-  // Latest Books = newest four; server sorts createdAt desc by default,
-  // so a newly added book automatically pushes the oldest out.
-  const latestBooks = useMemo(() => books.slice(0, 4), [books]);
-  const categoryCount = useMemo(() => new Set(books.map((book) => book.category)).size, [books]);
-  const bestSellerCount = useMemo(() => books.filter((book) => book.isBestSeller).length, [books]);
-
-  const highlights = [
-    {
-      icon: <FaLayerGroup />,
-      title: "Complete Learning Range",
-      body:
-        categoryCount > 0
-          ? `A curated catalogue spanning ${categoryCount} categories — from Pre-School foundations to Higher Secondary board preparation.`
-          : "A curated catalogue spanning Pre-School foundations to Higher Secondary board preparation."
-    },
-    {
-      icon: <FaFeatherAlt />,
-      title: "Crafted by Educators",
-      body: "Every title is developed with teachers, curriculum planners, and subject specialists for classroom-ready quality."
-    },
-    {
-      icon: <FaWhatsapp />,
-      title: "Direct Enquiries",
-      body: "Reach us instantly on WhatsApp for any book — availability, pricing, and bulk orders answered personally."
-    }
-  ];
+  // Admin-controlled: only books flagged "Landing Page" appear here.
+  const featuredBooks = useMemo(() => books.filter((book) => book.isLanding), [books]);
+  const authorCount = useMemo(() => new Set(books.map((book) => book.author)).size, [books]);
 
   return (
     <div className="lp">
@@ -163,7 +140,11 @@ const LandingContent = () => {
 
       <header className="lp-nav">
         <span className="lp-nav-brand">
-          <FaBookOpen aria-hidden="true" /> {settings.publicationName}
+          <BrandLogo className="lp-nav-logo" />
+          <span className="lp-nav-brand-text">
+            {settings.publicationName}
+            {settings.tagline && <small className="brand-tagline">{settings.tagline}</small>}
+          </span>
         </span>
         <div className="lp-nav-right">
           <SocialLinks settings={settings} className="lp-nav-social" />
@@ -183,11 +164,16 @@ const LandingContent = () => {
             animate="visible"
           >
             <motion.p className="lp-kicker" variants={fadeUp}>
-              <FaBookOpen aria-hidden="true" /> {settings.tagline}
+              <FaBookOpen aria-hidden="true" /> Educational Publishing House
             </motion.p>
             <motion.h1 id="lp-hero-title" variants={fadeUp}>
               {settings.publicationName}
             </motion.h1>
+            {settings.tagline && (
+              <motion.p className="brand-tagline lp-hero-tagline" variants={fadeUp}>
+                {settings.tagline}
+              </motion.p>
+            )}
             <motion.p className="lp-hero-sub" variants={fadeUp}>
               An educational publishing house crafting thoughtful books for early learners and
               secondary-level students — built with teachers, trusted by schools.
@@ -245,32 +231,6 @@ const LandingContent = () => {
                 <LandingBookCard key={book._id} book={book} />
               ))}
             </motion.div>
-          </section>
-        )}
-
-        {/* Latest books */}
-        {latestBooks.length > 0 && (
-          <section className="lp-section" aria-labelledby="lp-latest-title">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={revealViewport}
-            >
-              <p className="lp-section-kicker">Fresh off the press</p>
-              <h2 id="lp-latest-title">Latest Books</h2>
-            </motion.div>
-            <motion.div
-              className="lp-book-grid"
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={revealViewport}
-            >
-              {latestBooks.map((book) => (
-                <LandingBookCard key={book._id} book={book} />
-              ))}
-            </motion.div>
             <motion.div
               className="lp-center"
               variants={fadeUp}
@@ -278,8 +238,8 @@ const LandingContent = () => {
               whileInView="visible"
               viewport={revealViewport}
             >
-              <Link to="/books" className="lp-btn lp-btn-ghost">
-                View the full catalogue <FaArrowRight aria-hidden="true" />
+              <Link to="/books" className="lp-btn lp-btn-primary">
+                Browse Catalogue <FaArrowRight aria-hidden="true" />
               </Link>
             </motion.div>
           </section>
@@ -315,17 +275,17 @@ const LandingContent = () => {
             {books.length > 0 && (
               <dl className="lp-stats">
                 <div className="lp-stat">
-                  <dt>Titles in catalogue</dt>
+                  <dt>Our Books</dt>
                   <dd>{books.length}</dd>
                 </div>
                 <div className="lp-stat">
-                  <dt>Learning categories</dt>
-                  <dd>{categoryCount}</dd>
+                  <dt>Authors</dt>
+                  <dd>{authorCount}</dd>
                 </div>
-                {bestSellerCount > 0 && (
+                {settings.readers && (
                   <div className="lp-stat">
-                    <dt>Best sellers</dt>
-                    <dd>{bestSellerCount}</dd>
+                    <dt>Total readers</dt>
+                    <dd>{settings.readers}</dd>
                   </div>
                 )}
               </dl>
@@ -333,53 +293,18 @@ const LandingContent = () => {
           </div>
         </motion.section>
 
-        {/* Why choose us */}
-        <section className="lp-section" aria-labelledby="lp-why-title">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={revealViewport}
-          >
-            <p className="lp-section-kicker">Why Choose Us</p>
-            <h2 id="lp-why-title">Built around learners</h2>
-          </motion.div>
-          <motion.div
-            className="lp-highlight-grid"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={revealViewport}
-          >
-            {highlights.map((item) => (
-              <motion.article key={item.title} className="lp-highlight-card" variants={fadeUp}>
-                <span className="lp-highlight-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </motion.article>
-            ))}
-          </motion.div>
-        </section>
-
-        {/* CTA */}
-        <motion.section
-          className="lp-section lp-cta"
+        {/* More → full client site */}
+        <motion.div
+          className="lp-section lp-center"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={revealViewport}
-          aria-labelledby="lp-cta-title"
         >
-          <div className="lp-cta-card">
-            <h2 id="lp-cta-title">Find the right book for every stage</h2>
-            <p>Step inside the full {settings.publicationName} experience.</p>
-            <Link to="/home" className="lp-btn lp-btn-primary lp-btn-lg">
-              Explore <FaArrowRight aria-hidden="true" />
-            </Link>
-          </div>
-        </motion.section>
+          <Link to="/home" className="lp-btn lp-btn-primary lp-btn-lg">
+            More <FaArrowRight aria-hidden="true" />
+          </Link>
+        </motion.div>
       </main>
 
       <footer className="lp-footer">

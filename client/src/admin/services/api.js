@@ -88,7 +88,8 @@ export const activityLogApi = {
 
 export const settingsApi = {
   getSettings: () => request("/admin/settings"),
-  updateSettings: (data) => request("/admin/settings", { method: "PUT", body: JSON.stringify(data) })
+  updateSettings: (data) => request("/admin/settings", { method: "PUT", body: JSON.stringify(data) }),
+  updateReaders: (readers) => request("/admin/readers", { method: "PUT", body: JSON.stringify({ readers }) })
 };
 
 export const adminUserApi = {

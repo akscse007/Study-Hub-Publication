@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaBell, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaFacebookF, FaBell, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { useNotifications } from "../hooks/useNotifications";
 import { useSettings } from "../context/SettingsContext";
 import { formatWhatsAppForLink } from "../utils/contactFormatters";
@@ -36,6 +36,11 @@ const Footer = () => {
             {settings.instagram ? (
               <a href={settings.instagram} target="_blank" rel="noreferrer">
                 <FaInstagram /> Instagram
+              </a>
+            ) : null}
+            {settings.youtube ? (
+              <a href={settings.youtube} target="_blank" rel="noreferrer">
+                <FaYoutube /> YouTube
               </a>
             ) : null}
             <a href={`https://wa.me/${formatWhatsAppForLink(settings.whatsappNumber)}`} target="_blank" rel="noreferrer">

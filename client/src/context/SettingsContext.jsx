@@ -3,13 +3,15 @@ import { settingsApi } from "../services/api";
 
 const defaultSettings = {
   publicationName: "Study-Hub Publication",
-  tagline: "Inspiring learners across West Bengal",
+  tagline: "Success and Nothing Less",
   address: "123 College Street, Kolkata — 700073",
   phone: "+91 00000 00000",
   email: "hello@studyhubpublication.com",
   facebook: "https://facebook.com",
   instagram: "",
-  whatsappNumber: "919876543210"
+  youtube: "",
+  whatsappNumber: "919876543210",
+  readers: ""
 };
 
 const SettingsContext = createContext(defaultSettings);

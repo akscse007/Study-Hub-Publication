@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { FaBookOpen, FaLock, FaUser } from "react-icons/fa";
+import { FaLock, FaUser } from "react-icons/fa";
+import BrandLogo from "../../components/BrandLogo";
 
 const Login = () => {
   const [userId, setUserId] = useState("");
@@ -30,10 +31,11 @@ const Login = () => {
       <div className="admin-login-card">
         <div className="admin-login-brand">
           <span className="admin-login-icon">
-            <FaBookOpen />
+            <BrandLogo />
           </span>
           <div>
             <strong>Study-Hub</strong>
+            <small className="brand-tagline">Success and Nothing Less</small>
             <small>Admin Login</small>
           </div>
         </div>

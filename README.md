@@ -4,10 +4,11 @@ Production-ready educational publishing website: React + Vite frontend, Node/Exp
 
 ## Features
 
-- **Landing page** at `/` — standalone premium page (glass morphism, light theme, Framer Motion animations). "Explore" leads into the main site at `/home`. Admin Login sits top-right in the landing navbar.
+- **Landing page** at `/` — standalone premium page (glass morphism, light theme, Framer Motion animations): hero, Featured Books (admin-picked via the "Landing Page" checkbox, centered layout), About with live stats (titles, unique authors, admin-entered Total Readers), and a "More" button into the main site at `/home`. Admin Login sits top-right in the landing navbar.
 - **Main website** at `/home` — hero slider, book catalogue with search/categories, book details, contact, FAQ, about, media, seller information, and a public **Announcements** page (`/announcements`) showing published announcements from the admin panel (drafts stay hidden).
 - **Multiple cover images per book** — books store an `images` array; the first image is the main cover (legacy `image` field stays mirrored for backward compatibility). Book details shows a Swiper slider when a book has more than one image.
-- **Admin panel** at `/admin` — dashboard, books CRUD, inventory, announcements, enquiries, WhatsApp leads, activity logs, settings, admin user management with role hierarchy (`subadmin` < `superadmin` < `developer`).
+- **Admin panel** at `/admin` — dashboard, books CRUD, inventory, announcements, enquiries, WhatsApp leads, activity logs, readers counter, settings, admin user management with role hierarchy (`subadmin` < `superadmin` < `developer`).
+- **Centralized branding** — the logo lives in one file (`client/public/logo.png`, also the favicon); swap it to rebrand the whole site. The tagline under the publication name comes from Admin → Settings.
 - **Dynamic contact email** — the landing page Email buttons open the visitor's default mail client (`mailto:`) addressed to the publication email configured in Admin → Settings. Change the email in settings and every Email button updates automatically; buttons hide when no email is configured.
 - **Live updates & new-book alerts** — the site keeps a Server-Sent Events connection open: the catalogue refreshes automatically when books change, and visitors who granted browser-notification permission get an alert when a new book is published. Visitors can also subscribe by email for release notifications.
 
@@ -26,6 +27,7 @@ Other commands:
 - `npm run build` — production build of the client (output in `client/dist/`)
 - `npm start` — production server
 - `node server/src/scripts/testSmtp.js` — verify SMTP configuration
+- `node server/src/scripts/fixIsbnIndex.js` — one-time migration for databases created before ISBN became optional (replaces the unique ISBN index with a sparse one)
 
 ## Environment variables
 
@@ -53,8 +55,9 @@ Never commit `server/.env`. It is listed in `.gitignore`; if a copy was ever com
 ## Admin usage
 
 - Log in at `/admin/login`. First account: `npm run seed:admin` creates a developer user (change its password immediately via Admin → Users).
-- **Books → Add/Edit**: paste cover image URLs into the single textarea — one URL per line or comma-separated. Duplicates, blanks, and invalid URLs are removed automatically; the first URL becomes the main cover shown on cards and lists.
-- **Settings** (developer role): publication name, tagline, contact details, WhatsApp number, and social links (Facebook, Instagram). Email and social buttons across the landing page and main site read these values live; leave a field empty to hide its button/icon.
+- **Books → Add/Edit**: required fields are Title, Author, Description, Category, Price, and at least one cover image URL; ISBN, Rating, and Stock are optional. Paste cover image URLs into the single textarea — one URL per line or comma-separated. Duplicates, blanks, and invalid URLs are removed automatically; the first URL becomes the main cover shown on cards and lists. The **Landing Page** checkbox (independent of Featured/Best Seller) controls which books appear in the landing page Featured Books section.
+- **Readers**: enter the "Total Readers" figure shown in the landing page stats as free text (e.g. `1500+`, `1 Lakh+`); leave empty to hide the stat. Available to every admin role.
+- **Settings** (developer role): publication name, tagline, contact details, WhatsApp number, and social links (Facebook, Instagram, YouTube). Email and social buttons across the landing page and main site read these values live; leave a field empty to hide its button/icon. YouTube appears everywhere other social icons do except the top contact ribbon.
 
 ## Security notes
 

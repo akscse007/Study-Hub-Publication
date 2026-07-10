@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 import { fadeUp, viewportConfig } from "../components/motion";
-import { useSettings } from "../context/SettingsContext";
+import ContactEmail from "../components/ContactEmail";
 
 const WriteForUsPage = () => {
-  const settings = useSettings();
   return (
     <motion.section
       className="section"
@@ -16,8 +15,9 @@ const WriteForUsPage = () => {
         <h1>Write for Us</h1>
         <p>
           We welcome educators and subject experts to contribute manuscripts, question banks, and curriculum-focused
-          material. Share your proposal at <a href={`mailto:${settings.email}`}>{settings.email}</a>.
+          material. Share your proposal at the email below.
         </p>
+        <ContactEmail chip />
       </div>
     </motion.section>
   );

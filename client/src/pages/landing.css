@@ -298,6 +298,36 @@
   line-height: 1.06;
 }
 
+/* Company tagline: smaller, nudged right, existing theme gold-brown. */
+.lp-hero-tagline {
+  margin: 10px 0 0;
+  padding-left: clamp(12px, 3vw, 28px);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: #8a6a1f;
+}
+
+.lp-nav-logo {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.lp-nav-brand-text {
+  display: grid;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.lp-nav-brand .brand-tagline {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #8a6a1f;
+}
+
 .lp-hero-sub {
   margin: 22px 0 0;
   max-width: 34rem;
@@ -421,11 +451,18 @@
 
 /* ---------- book cards ---------- */
 
+/* Centered flex: 1 book sits centered, pairs center, more wrap outward naturally. */
 .lp-book-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 22px;
   margin-top: 34px;
+}
+
+.lp-book-grid .lp-book-card {
+  flex: 0 1 240px;
+  min-width: 200px;
 }
 
 .lp-book-card {

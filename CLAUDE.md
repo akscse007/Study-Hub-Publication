@@ -17,6 +17,7 @@ Run from repo root:
 - `npm run seed` — seed books from `server/src/data/seedBooks.js`
 - `npm run seed:admin` — seed admin users
 - `node server/src/scripts/testSmtp.js` — verify SMTP config
+- `node server/src/scripts/fixIsbnIndex.js` — one-time migration for pre-existing databases: replaces the old non-sparse unique `isbn_1` index with the sparse one the Book schema now declares (ISBN became optional)
 
 Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_URL`, `JWT_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`. Startup fails hard if either the SMTP connection or MongoDB connection fails (see `server/src/index.js` `startServer`).
 
@@ -26,11 +27,22 @@ Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_
 
 The client is a single React app containing both the public site and the admin panel. Public pages live in `client/src/pages/` with shared chrome in `client/src/components/PublicLayout.jsx`; the admin panel lives entirely under `client/src/admin/` (own pages, components, hooks, `styles.css`, and API client). Routing for both is in `client/src/routes/AppRoutes.jsx` — admin routes sit under `/admin` behind `ProtectedRoute`, which enforces a minimum role (panel-wide `subadmin`; `/admin/settings` requires `developer`).
 
-`/` is a standalone, lazy-loaded landing page (`client/src/pages/LandingPage.jsx` + `landing.css`, all classes `lp-` prefixed) outside `PublicLayout`; the site homepage lives at `/home`. Internal "home" links must point to `/home`, not `/`.
+`/` is a standalone, lazy-loaded landing page (`client/src/pages/LandingPage.jsx` + `landing.css`, all classes `lp-` prefixed) outside `PublicLayout`; the site homepage lives at `/home`. Internal "home" links must point to `/home`, not `/`. The landing page is deliberately minimal: hero → Featured Books (only books with the `isLanding` flag, centered flex layout) → About with stats (catalogue count, unique authors, admin-entered Total Readers) → a "More" button to `/home`.
+
+### Branding
+
+The logo is one asset: `client/public/logo.png`, rendered everywhere via `client/src/components/BrandLogo.jsx` (public navbar, landing nav, admin sidebar/login) and referenced directly as the favicon (`client/index.html`) and browser-notification icon. Replace that one file to rebrand. The company tagline comes from `settings.tagline` and renders under the publication name (`.brand-tagline` class); the admin panel hardcodes it (no SettingsContext there). The shared email block is `client/src/components/ContactEmail.jsx` (Contact Us + Write For Us; `chip` prop renders the pill variant).
 
 ### Book cover images
 
 Books support multiple cover images: `images` (array) with legacy `image` kept mirrored to `images[0]`. Never read `book.image` directly in the client — use `getBookImages`/`getBookCover` from `client/src/utils/bookImages.js`. Server-side, all book API responses pass through `withImages` and admin create/update payloads through `normalizeBookImagesInput` (both in `server/src/utils/bookImages.js`), which parses newline/comma-separated URL input, dedupes, and drops invalid URLs. Old single-`image` documents work unchanged.
+
+### Book model specifics
+
+- Required fields: `title`, `author`, `description`, `category`, `image`, `price`. `isbn` and `rating` are optional (`rating` defaults to 0).
+- `isbn` has a **sparse** unique index; empty-string ISBNs must never be stored — the admin book controller deletes an empty `isbn` on create and `$unset`s it on update.
+- `bookId` is an internal auto-increment number assigned by a `pre("save")` hook using the `Counter` model (`server/src/models/Counter.js`). It is stripped from every API response by `withImages` — never expose or display it. Bulk inserts skip save hooks, which is why `seed.js` uses `Book.create()`, not `insertMany()`.
+- `isLanding` (boolean) is the admin-controlled "Landing Page" flag, independent of `isFeatured`/`isBestSeller`; it alone decides what appears in the landing page Featured Books section.
 
 ### Two API clients
 
@@ -54,4 +66,6 @@ Role hierarchy (rank order): `subadmin` < `superadmin` < `developer` — defined
 - Admin actions and auth events are recorded via the `ActivityLog` model (`server/src/utils/activityLogger.js`), surfaced in the admin Activity Logs page.
 - Seller information is fully dynamic: the `Seller` model stores a GeoJSON `location` point with a 2dsphere index; `GET /api/sellers?lat=&lng=` (and the admin equivalent) orders results by `$geoNear` proximity via shared helpers in `server/src/utils/sellers.js` (payload validation lives there too). Client-side, geocoding/autocomplete goes through Nominatim (`client/src/utils/geocode.js` + `client/src/components/LocationAutocomplete.jsx`, shared by the public Seller Information page and the admin Sellers page) — searches are debounced 450ms to respect Nominatim's 1 req/s policy.
 - Email goes through `server/src/utils/emailService.js` (nodemailer).
-- Site-wide editable settings/content are stored in the `Settings` model and exposed publicly via `/api/settings`, consumed client-side through `SettingsContext`.
+- Site-wide editable settings/content are stored in the `Settings` model (one blob under `key: "publication"`) and exposed publicly via `/api/settings`, consumed client-side through `SettingsContext`. Keys: `publicationName`, `tagline`, `address`, `phone`, `email`, `facebook`, `instagram`, `youtube`, `whatsappNumber`, `readers`. Adding a key means touching four default objects: both server settings controllers, `SettingsContext.jsx`, and the admin Settings form. GET responses merge stored values over defaults; `updateSettings` merges the whitelisted body over the stored blob (so keys saved elsewhere survive).
+- `readers` (the landing page "Total Readers" figure, a free-form string like "1 Lakh+") is edited on the admin **Readers** page via `PUT /api/admin/readers` — open to any authenticated admin, while `PUT /api/admin/settings` stays developer-only.
+- Social icons (Facebook, Instagram, YouTube, WhatsApp, email) render conditionally wherever configured — footer strip, home Quick Contact banner, landing nav/footer. Exception: the top brown contact ribbon (`TopBar.jsx`) shows only phone + WhatsApp; do not add other socials there.

@@ -1,5 +1,6 @@
 import { NavLink, Link } from "react-router-dom";
-import { FaBookOpen, FaLock } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
+import BrandLogo from "./BrandLogo";
 import { useSettings } from "../context/SettingsContext";
 
 const navItems = [
@@ -18,9 +19,12 @@ const Navbar = () => {
       <div className="container navbar-content">
         <Link to="/home" className="logo">
           <span className="logo-icon">
-            <FaBookOpen />
+            <BrandLogo />
           </span>
-          <span className="logo-text">{settings.publicationName}</span>
+          <span className="logo-text">
+            {settings.publicationName}
+            {settings.tagline && <small className="brand-tagline">{settings.tagline}</small>}
+          </span>
         </Link>
         <nav className="nav-links">
           {navItems.map((item) => (

@@ -38,6 +38,7 @@ export const normalizeBookImagesInput = (body = {}) => {
 
 // Read-side normalizer: older documents only have `image`; fill `images`
 // from it so every API response exposes a consistent images array.
+// Also strips the internal auto-increment `bookId` — never sent to the frontend.
 export const withImages = (book) => {
   if (!book) return book;
   const plain = typeof book.toObject === "function" ? book.toObject() : book;
@@ -45,5 +46,6 @@ export const withImages = (book) => {
     Array.isArray(plain.images) && plain.images.length > 0
       ? plain.images
       : [plain.image].filter(Boolean);
-  return { ...plain, images, image: images[0] ?? plain.image };
+  const { bookId, ...rest } = plain;
+  return { ...rest, images, image: images[0] ?? plain.image };
 };

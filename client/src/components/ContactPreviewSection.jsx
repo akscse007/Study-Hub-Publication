@@ -56,7 +56,9 @@ const ContactPreviewSection = () => {
                 <FaRegClock />
                 <span>
                   <strong>Business Hours</strong>
-                  Mon – Sat: 10:00 AM – 7:00 PM
+                  Mon – Fri: 11:00 AM – 6:00 PM
+                  <br />
+                  Sat: 11:00 AM – 5:00 PM
                 </span>
               </li>
             </ul>

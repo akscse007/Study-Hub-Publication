@@ -9,7 +9,8 @@ const runSeed = async () => {
   try {
     await connectDB();
     await Book.deleteMany({});
-    await Book.insertMany(seedBooks);
+    // create() (not insertMany) so the bookId auto-increment pre-save hook runs.
+    await Book.create(seedBooks);
     console.log("Books seeded successfully.");
     process.exit(0);
   } catch (error) {

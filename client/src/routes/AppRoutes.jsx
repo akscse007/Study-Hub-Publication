@@ -24,6 +24,7 @@ import Announcements from "../admin/pages/Announcements";
 import WhatsAppLeads from "../admin/pages/WhatsAppLeads";
 import Inventory from "../admin/pages/Inventory";
 import ActivityLogs from "../admin/pages/ActivityLogs";
+import Readers from "../admin/pages/Readers";
 import Settings from "../admin/pages/Settings";
 import AdminUsers from "../admin/pages/AdminUsers";
 import Sellers from "../admin/pages/Sellers";
@@ -72,6 +73,7 @@ const AppRoutes = () => {
         <Route path="sellers" element={<Sellers />} />
         <Route path="whatsapp-leads" element={<WhatsAppLeads />} />
         <Route path="inventory" element={<Inventory />} />
+        <Route path="readers" element={<Readers />} />
         <Route path="activity-logs" element={<ActivityLogs />} />
         <Route
           path="settings"
