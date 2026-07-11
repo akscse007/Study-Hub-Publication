@@ -40,7 +40,7 @@ const Books = () => {
     setEditingBook(book);
     setValues({
       title: book.title,
-      author: book.author,
+      author: book.author ?? "",
       description: book.description ?? "",
       isbn: book.isbn ?? "",
       rating: book.rating ?? "",
@@ -114,7 +114,7 @@ const Books = () => {
     const matchesSearch =
       !search ||
       book.title.toLowerCase().includes(search.toLowerCase()) ||
-      book.author.toLowerCase().includes(search.toLowerCase()) ||
+      (book.author || "").toLowerCase().includes(search.toLowerCase()) ||
       (book.isbn || "").toLowerCase().includes(search.toLowerCase());
     const matchesCategory = !category || book.category === category;
     const matchesStock =
@@ -234,8 +234,8 @@ const Books = () => {
                     <input id="book-title" className="admin-input" name="title" value={values.title} onChange={handleChange} required />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="book-author">Author</label>
-                    <input id="book-author" className="admin-input" name="author" value={values.author} onChange={handleChange} required />
+                    <label htmlFor="book-author">Author (optional)</label>
+                    <input id="book-author" className="admin-input" name="author" value={values.author} onChange={handleChange} />
                   </div>
                 </div>
                 <div className="form-row">

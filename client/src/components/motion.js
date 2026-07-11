@@ -1,6 +1,10 @@
 export const viewportConfig = {
   once: false,
-  amount: 0.2
+  // "some" (any part visible) instead of a fixed 0.2 fraction: page-level
+  // sections grow far taller than the viewport on mobile (single-column
+  // grids), so 20% of them can never be on screen at once and the section
+  // would stay stuck at opacity 0.
+  amount: "some"
 };
 
 export const fadeUp = {

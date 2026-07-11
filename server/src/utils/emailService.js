@@ -115,11 +115,11 @@ export const notifySubscribersAboutBook = async (book, subscribers) => {
   const siteUrl = SITE_URL;
   const html = `
     <h2>A new book is available at Study-Hub Publication</h2>
-    <p><strong>${escapeHtml(book.title)}</strong> by ${escapeHtml(book.author)} has just been released.</p>
+    <p><strong>${escapeHtml(book.title)}</strong>${book.author ? ` by ${escapeHtml(book.author)}` : ""} has just been released.</p>
     <p>Category: ${escapeHtml(book.category)}</p>
     <p><a href="${siteUrl}/books">Browse all books</a></p>
   `;
-  const text = `A new book is available at Study-Hub Publication: "${book.title}" by ${book.author}. Category: ${book.category}. Browse: ${siteUrl}/books`;
+  const text = `A new book is available at Study-Hub Publication: "${book.title}"${book.author ? ` by ${book.author}` : ""}. Category: ${book.category}. Browse: ${siteUrl}/books`;
 
   return sendEmail({
     bcc: subscribers.map((s) => s.email).join(","),

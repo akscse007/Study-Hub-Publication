@@ -6,7 +6,7 @@ const bookSchema = new mongoose.Schema(
     // Internal auto-increment id; never exposed in the UI, never replaces _id.
     bookId: { type: Number, index: true },
     title: { type: String, required: true, trim: true },
-    author: { type: String, required: true, trim: true },
+    author: { type: String, trim: true },
     description: { type: String, required: true, trim: true },
     // Optional; sparse unique so multiple books may omit it.
     isbn: { type: String, trim: true, index: { unique: true, sparse: true } },

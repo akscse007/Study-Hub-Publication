@@ -127,7 +127,7 @@ const LandingContent = () => {
 
   // Admin-controlled: only books flagged "Featured" appear here.
   const featuredBooks = useMemo(() => books.filter((book) => book.isFeatured), [books]);
-  const authorCount = useMemo(() => new Set(books.map((book) => book.author)).size, [books]);
+  const authorCount = useMemo(() => new Set(books.map((book) => book.author).filter(Boolean)).size, [books]);
 
   return (
     <div className="lp">
@@ -169,11 +169,6 @@ const LandingContent = () => {
             <motion.h1 id="lp-hero-title" variants={fadeUp}>
               {settings.publicationName}
             </motion.h1>
-            {settings.tagline && (
-              <motion.p className="brand-tagline lp-hero-tagline" variants={fadeUp}>
-                {settings.tagline}
-              </motion.p>
-            )}
             <motion.p className="lp-hero-sub" variants={fadeUp}>
               An educational publishing house crafting thoughtful books for early learners and
               secondary-level students — built with teachers, trusted by schools.
@@ -200,7 +195,7 @@ const LandingContent = () => {
           aria-labelledby="lp-intro-title"
         >
           <p className="lp-section-kicker">The Publication</p>
-          <h2 id="lp-intro-title">Inspiring minds, shaping futures</h2>
+          <h2 id="lp-intro-title">Success and Nothing Less</h2>
           <p className="lp-section-sub">
             {settings.publicationName} publishes academic resources developed with curriculum planners
             and subject specialists — helping students, guardians, and schools find the right book for
@@ -225,7 +220,9 @@ const LandingContent = () => {
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
-              viewport={revealViewport}
+              // Grid can exceed 5x the viewport height on mobile (single
+              // column), so a 0.2 amount threshold would never fire.
+              viewport={{ once: true, amount: "some" }}
             >
               {featuredBooks.map((book) => (
                 <LandingBookCard key={book._id} book={book} />

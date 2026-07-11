@@ -55,10 +55,12 @@ export const createAdminBook = async (req, res, next) => {
     if (badField) return res.status(400).json({ message: `Invalid numeric value for ${badField}` });
     // ISBN is optional; an empty string would collide on the sparse unique index.
     if (typeof payload.isbn === "string" && !payload.isbn.trim()) delete payload.isbn;
+    // Author is optional; don't store empty strings.
+    if (typeof payload.author === "string" && !payload.author.trim()) delete payload.author;
     const book = await Book.create(payload);
     broadcastNotification("new-book", {
       title: "New book released",
-      message: `"${book.title}" by ${book.author} is now available.`,
+      message: `"${book.title}"${book.author ? ` by ${book.author}` : ""} is now available.`,
       bookId: book._id
     });
     broadcastNotification("books-updated", { reason: "new-book" });
@@ -83,7 +85,12 @@ export const updateAdminBook = async (req, res, next) => {
     const update = { ...payload };
     if (typeof update.isbn === "string" && !update.isbn.trim()) {
       delete update.isbn;
-      update.$unset = { isbn: 1 };
+      update.$unset = { ...update.$unset, isbn: 1 };
+    }
+    // Author is optional; clearing it removes the field instead of storing "".
+    if (typeof update.author === "string" && !update.author.trim()) {
+      delete update.author;
+      update.$unset = { ...update.$unset, author: 1 };
     }
     const book = await Book.findByIdAndUpdate(req.params.id, update, {
       new: true,
