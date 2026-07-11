@@ -77,11 +77,6 @@ export const inventoryApi = {
   getInventory: () => request("/admin/inventory")
 };
 
-export const contentApi = {
-  getContent: () => request("/admin/content"),
-  updateContent: (data) => request("/admin/content", { method: "PUT", body: JSON.stringify(data) })
-};
-
 export const activityLogApi = {
   getLogs: () => request("/admin/activity-logs")
 };

@@ -20,10 +20,8 @@ const bookSchema = new mongoose.Schema(
     // Multiple cover images; `image` mirrors images[0] for backward compatibility.
     images: { type: [String], default: undefined },
     isBestSeller: { type: Boolean, default: false },
+    // Featured flag: controls the landing page Featured Books section.
     isFeatured: { type: Boolean, default: false },
-    // Landing Page flag: independent of Featured/Best Seller; controls the
-    // landing page Featured Books section.
-    isLanding: { type: Boolean, default: false },
     searchCount: { type: Number, default: 0, min: 0 },
     price: { type: Number, required: true, min: 0, default: 0 },
     stock: { type: Number, required: true, min: 0, default: 0 },

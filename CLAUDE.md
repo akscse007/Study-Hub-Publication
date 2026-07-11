@@ -27,7 +27,7 @@ Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_
 
 The client is a single React app containing both the public site and the admin panel. Public pages live in `client/src/pages/` with shared chrome in `client/src/components/PublicLayout.jsx`; the admin panel lives entirely under `client/src/admin/` (own pages, components, hooks, `styles.css`, and API client). Routing for both is in `client/src/routes/AppRoutes.jsx` — admin routes sit under `/admin` behind `ProtectedRoute`, which enforces a minimum role (panel-wide `subadmin`; `/admin/settings` requires `developer`).
 
-`/` is a standalone, lazy-loaded landing page (`client/src/pages/LandingPage.jsx` + `landing.css`, all classes `lp-` prefixed) outside `PublicLayout`; the site homepage lives at `/home`. Internal "home" links must point to `/home`, not `/`. The landing page is deliberately minimal: hero → Featured Books (only books with the `isLanding` flag, centered flex layout) → About with stats (catalogue count, unique authors, admin-entered Total Readers) → a "More" button to `/home`.
+`/` is a standalone, lazy-loaded landing page (`client/src/pages/LandingPage.jsx` + `landing.css`, all classes `lp-` prefixed) outside `PublicLayout`; the site homepage lives at `/home`. Internal "home" links must point to `/home`, not `/`. The landing page is deliberately minimal: hero → Featured Books (only books with the `isFeatured` flag, centered flex layout) → About with stats (catalogue count, unique authors, admin-entered Total Readers) → a "More" button to `/home`.
 
 ### Branding
 
@@ -42,7 +42,7 @@ Books support multiple cover images: `images` (array) with legacy `image` kept m
 - Required fields: `title`, `author`, `description`, `category`, `image`, `price`. `isbn` and `rating` are optional (`rating` defaults to 0).
 - `isbn` has a **sparse** unique index; empty-string ISBNs must never be stored — the admin book controller deletes an empty `isbn` on create and `$unset`s it on update.
 - `bookId` is an internal auto-increment number assigned by a `pre("save")` hook using the `Counter` model (`server/src/models/Counter.js`). It is stripped from every API response by `withImages` — never expose or display it. Bulk inserts skip save hooks, which is why `seed.js` uses `Book.create()`, not `insertMany()`.
-- `isLanding` (boolean) is the admin-controlled "Landing Page" flag, independent of `isFeatured`/`isBestSeller`; it alone decides what appears in the landing page Featured Books section.
+- `isFeatured` (boolean) is the admin-controlled "Featured" flag, independent of `isBestSeller`; it alone decides what appears in the landing page Featured Books section. The former separate `isLanding` flag was merged into it (`server/src/scripts/removeIsLanding.js` migrates old databases).
 
 ### Two API clients
 

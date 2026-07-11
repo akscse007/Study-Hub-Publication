@@ -125,8 +125,8 @@ const LandingContent = () => {
   const settings = useSettings();
   const { books, loading } = useBooks();
 
-  // Admin-controlled: only books flagged "Landing Page" appear here.
-  const featuredBooks = useMemo(() => books.filter((book) => book.isLanding), [books]);
+  // Admin-controlled: only books flagged "Featured" appear here.
+  const featuredBooks = useMemo(() => books.filter((book) => book.isFeatured), [books]);
   const authorCount = useMemo(() => new Set(books.map((book) => book.author)).size, [books]);
 
   return (

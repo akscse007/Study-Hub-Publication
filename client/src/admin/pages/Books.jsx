@@ -18,8 +18,7 @@ const emptyBook = {
   price: "",
   stock: "",
   isBestSeller: false,
-  isFeatured: false,
-  isLanding: false
+  isFeatured: false
 };
 
 const Books = () => {
@@ -52,8 +51,7 @@ const Books = () => {
       price: book.price ?? "",
       stock: book.stock ?? "",
       isBestSeller: book.isBestSeller,
-      isFeatured: book.isFeatured,
-      isLanding: book.isLanding ?? false
+      isFeatured: book.isFeatured
     });
     setIsModalOpen(true);
   };
@@ -300,7 +298,7 @@ const Books = () => {
                   <label htmlFor="book-description">Description</label>
                   <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} required />
                 </div>
-                <div className="form-row" style={{ gridTemplateColumns: "repeat(3, minmax(0, auto))", justifyContent: "start" }}>
+                <div className="form-row" style={{ gridTemplateColumns: "repeat(2, minmax(0, auto))", justifyContent: "start" }}>
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
                     <input type="checkbox" name="isBestSeller" checked={values.isBestSeller} onChange={handleChange} />
                     Best Seller
@@ -308,10 +306,6 @@ const Books = () => {
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
                     <input type="checkbox" name="isFeatured" checked={values.isFeatured} onChange={handleChange} />
                     Featured
-                  </label>
-                  <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                    <input type="checkbox" name="isLanding" checked={values.isLanding} onChange={handleChange} />
-                    Landing Page
                   </label>
                 </div>
               </div>

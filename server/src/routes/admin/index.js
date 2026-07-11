@@ -26,7 +26,6 @@ import {
   deleteWhatsAppLead
 } from "../../controllers/admin/whatsappLeadController.js";
 import { getInventory } from "../../controllers/admin/inventoryController.js";
-import { getContent, updateContent } from "../../controllers/admin/contentController.js";
 import { getActivityLogs } from "../../controllers/admin/activityLogController.js";
 import { getSettings, updateSettings, updateReaders } from "../../controllers/admin/settingsController.js";
 import {
@@ -68,9 +67,6 @@ router.patch("/whatsapp-leads/:id/status", updateWhatsAppLeadStatus);
 router.delete("/whatsapp-leads/:id", deleteWhatsAppLead);
 
 router.get("/inventory", getInventory);
-
-router.get("/content", getContent);
-router.put("/content", updateContent);
 
 router.get("/activity-logs", getActivityLogs);
 

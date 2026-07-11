@@ -23,6 +23,8 @@ const EXCLUDED_DETAIL_FIELDS = new Set([
   "searchCount",
   "isActive",
   "isFeatured",
+  // Legacy flag; may linger on old documents until the removeIsLanding script runs.
+  "isLanding",
   "isBestSeller",
   "createdAt",
   "updatedAt",
@@ -59,12 +61,6 @@ const bestSellerBadgeStyle = {
   ...badgeStyle,
   background: "#9f1e1e",
   color: "#ffefdc",
-};
-
-const featuredBadgeStyle = {
-  ...badgeStyle,
-  background: "#5d4311",
-  color: "#f7e5c5",
 };
 
 const newBadgeStyle = {
@@ -163,14 +159,11 @@ const BookDetailsPage = () => {
         </div>
         <article className="details-card">
           <h1>{book.title}</h1>
-          {(book.isBestSeller || book.isFeatured || isNewBook(book)) && (
+          {(book.isBestSeller || isNewBook(book)) && (
             <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
               {isNewBook(book) && <span style={newBadgeStyle}>New</span>}
               {book.isBestSeller === true && (
                 <span style={bestSellerBadgeStyle}>Best Seller</span>
-              )}
-              {book.isFeatured === true && (
-                <span style={featuredBadgeStyle}>Featured</span>
               )}
             </div>
           )}
