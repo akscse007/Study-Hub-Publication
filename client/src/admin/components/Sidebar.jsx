@@ -23,7 +23,7 @@ const baseMenu = [
   { path: "/admin/sellers", label: "Seller Information", icon: FaStore },
   { path: "/admin/whatsapp-leads", label: "WhatsApp Leads", icon: FaWhatsapp },
   { path: "/admin/inventory", label: "Inventory", icon: FaBoxes },
-  { path: "/admin/readers", label: "Readers", icon: FaUsers },
+  { path: "/admin/readers", label: "Landing Page", icon: FaUsers },
   { path: "/admin/activity-logs", label: "Activity Logs", icon: FaHistory }
 ];
 

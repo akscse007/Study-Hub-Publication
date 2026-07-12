@@ -4,10 +4,10 @@ Production-ready educational publishing website: React + Vite frontend, Node/Exp
 
 ## Features
 
-- **Landing page** at `/` — standalone premium page (glass morphism, light theme, Framer Motion animations): hero, Featured Books (admin-picked via the "Landing Page" checkbox, centered layout), About with live stats (titles, unique authors, admin-entered Total Readers), and a "More" button into the main site at `/home`. Admin Login sits top-right in the landing navbar.
+- **Landing page** at `/` — standalone premium page (glass morphism, light theme, Framer Motion animations): hero with three admin-uploaded floating images, Featured Books (admin-picked via the "Featured" checkbox, centered layout), About with live stats (titles, unique authors, admin-entered Total Readers), and a "More" button into the main site at `/home`. Admin Login sits top-right in the landing navbar.
 - **Main website** at `/home` — hero slider, book catalogue with search/categories, book details, contact, FAQ, about, media, seller information, and a public **Announcements** page (`/announcements`) showing published announcements from the admin panel (drafts stay hidden).
 - **Multiple cover images per book** — books store an `images` array; the first image is the main cover (legacy `image` field stays mirrored for backward compatibility). Book details shows a Swiper slider when a book has more than one image.
-- **Admin panel** at `/admin` — dashboard, books CRUD, inventory, announcements, enquiries, WhatsApp leads, activity logs, readers counter, settings, admin user management with role hierarchy (`subadmin` < `superadmin` < `developer`).
+- **Admin panel** at `/admin` — dashboard, books CRUD, inventory, announcements, enquiries, WhatsApp leads, activity logs, Landing Page controls (readers counter + hero image uploads), settings, admin user management with role hierarchy (`subadmin` < `superadmin` < `developer`).
 - **Centralized branding** — the logo lives in one file (`client/public/logo.png`, also the favicon); swap it to rebrand the whole site. The tagline under the publication name comes from Admin → Settings.
 - **Dynamic contact email** — the landing page Email buttons open the visitor's default mail client (`mailto:`) addressed to the publication email configured in Admin → Settings. Change the email in settings and every Email button updates automatically; buttons hide when no email is configured.
 - **Live updates & new-book alerts** — the site keeps a Server-Sent Events connection open: the catalogue refreshes automatically when books change, and visitors who granted browser-notification permission get an alert when a new book is published. Visitors can also subscribe by email for release notifications.
@@ -55,15 +55,15 @@ Never commit `server/.env`. It is listed in `.gitignore`; if a copy was ever com
 ## Admin usage
 
 - Log in at `/admin/login`. First account: `npm run seed:admin` creates a developer user (change its password immediately via Admin → Users).
-- **Books → Add/Edit**: required fields are Title, Author, Description, Category, Price, and at least one cover image URL; ISBN, Rating, and Stock are optional. Paste cover image URLs into the single textarea — one URL per line or comma-separated. Duplicates, blanks, and invalid URLs are removed automatically; the first URL becomes the main cover shown on cards and lists. The **Landing Page** checkbox (independent of Featured/Best Seller) controls which books appear in the landing page Featured Books section.
-- **Readers**: enter the "Total Readers" figure shown in the landing page stats as free text (e.g. `1500+`, `1 Lakh+`); leave empty to hide the stat. Available to every admin role.
+- **Books → Add/Edit**: required fields are Title, Author, Description, Category, Price, and at least one cover image URL; ISBN, Rating, and Stock are optional. Paste cover image URLs into the single textarea — one URL per line or comma-separated. Duplicates, blanks, and invalid URLs are removed automatically; the first URL becomes the main cover shown on cards and lists. The **Featured** checkbox (independent of Best Seller) controls which books appear in the landing page Featured Books section.
+- **Landing Page**: enter the "Total Readers" figure shown in the landing page stats as free text (e.g. `1500+`, `1 Lakh+`); leave empty to hide the stat. Upload the three hero floating images (Image 1–3) — JPG, JPEG, PNG, or WEBP up to 10 MB; each upload is automatically converted to optimized WEBP and replaces the previous image for that slot. Available to every admin role.
 - **Settings** (developer role): publication name, tagline, contact details, WhatsApp number, and social links (Facebook, Instagram, YouTube). Email and social buttons across the landing page and main site read these values live; leave a field empty to hide its button/icon. YouTube appears everywhere other social icons do except the top contact ribbon.
 
 ## Security notes
 
 - Admin JWTs expire after 7 days; login is rate-limited (10 attempts / 15 min per IP).
 - Public form endpoints (contact, enquiries, WhatsApp leads) are rate-limited and field-whitelisted.
-- Search queries are regex-escaped server-side; request bodies are capped at 200 kB.
+- Search queries are regex-escaped server-side; JSON request bodies are capped at 200 kB (landing hero image uploads: multipart, 10 MB cap, image mimetypes only, admin JWT required).
 - Baseline security headers are set on every API response (nosniff, frame deny, referrer policy; HSTS in production).
 
 ## Deployment
@@ -99,7 +99,7 @@ Never commit `server/.env`. It is listed in `.gitignore`; if a copy was ever com
 
 ### Cloudinary
 
-Not used. Book images are external URLs pasted by the admin (any HTTPS image host works, including Cloudinary URLs) — no upload pipeline or Cloudinary credentials exist in this project.
+Not used. Book images are external URLs pasted by the admin (any HTTPS image host works, including Cloudinary URLs). The only upload pipeline is the landing page hero images, which are converted to WEBP (sharp) and stored in MongoDB — deliberately DB-backed so they survive redeploys on hosts with ephemeral filesystems (e.g. Render); no Cloudinary credentials exist in this project.
 
 ## Architecture
 

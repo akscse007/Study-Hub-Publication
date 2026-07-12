@@ -13,6 +13,7 @@ import authRoutes from "./routes/authRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import announcementRoutes from "./routes/announcementRoutes.js";
 import sellerRoutes from "./routes/sellerRoutes.js";
+import landingImageRoutes from "./routes/landingImageRoutes.js";
 import { createRateLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
@@ -70,6 +71,7 @@ const publicFormLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 60 
 app.use("/api/books", bookRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/sellers", sellerRoutes);
+app.use("/api/landing-images", landingImageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/enquiries", publicFormLimiter, enquiryRoutes);
 app.use("/api/contact", publicFormLimiter, contactRoutes);

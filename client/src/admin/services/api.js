@@ -3,9 +3,12 @@ import { API_BASE_URL } from "../../config";
 const getToken = () => localStorage.getItem("sh_token");
 
 const request = async (url, options = {}) => {
+  // FormData bodies must not get an explicit Content-Type — the browser sets
+  // the multipart boundary itself.
+  const isFormData = options.body instanceof FormData;
   const res = await fetch(`${API_BASE_URL}${url}`, {
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       Authorization: `Bearer ${getToken()}`,
       ...options.headers
     },
@@ -85,6 +88,16 @@ export const settingsApi = {
   getSettings: () => request("/admin/settings"),
   updateSettings: (data) => request("/admin/settings", { method: "PUT", body: JSON.stringify(data) }),
   updateReaders: (readers) => request("/admin/readers", { method: "PUT", body: JSON.stringify({ readers }) })
+};
+
+export const landingImageApi = {
+  // Public metadata endpoint (slot + updatedAt for cache-busting previews).
+  getImages: () => request("/landing-images"),
+  uploadImage: (slot, file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    return request(`/admin/landing-images/${slot}`, { method: "PUT", body: formData });
+  }
 };
 
 export const adminUserApi = {

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useTransform, useReducedMotion } from "framer-motion";
 import {
@@ -19,9 +19,8 @@ import { fadeUp, staggerContainer } from "../components/motion";
 import { getBookCover } from "../utils/bookImages";
 import { isNewBook } from "../utils/isNewBook";
 import { buildContactMailto, formatWhatsAppForLink } from "../utils/contactFormatters";
-import heroImage1 from "../assets/landing/image1.webp";
-import heroImage2 from "../assets/landing/image2.webp";
-import heroImage3 from "../assets/landing/image3.webp";
+import { landingImageApi } from "../services/api";
+import { API_BASE_URL } from "../config";
 import "./landing.css";
 
 const revealViewport = { once: true, amount: 0.2 };
@@ -80,10 +79,24 @@ const SocialLinks = ({ settings, className }) => {
   );
 };
 
-// Local hero collage assets — bundled by Vite, independent of catalogue data.
-const HERO_IMAGES = [heroImage1, heroImage2, heroImage3];
-
 const HeroFloatingBooks = () => {
+  // Admin-managed hero collage: served from the API, updatedAt cache-busts replacements.
+  const [heroImages, setHeroImages] = useState([]);
+  useEffect(() => {
+    let active = true;
+    landingImageApi
+      .getImages()
+      .then((list) => {
+        if (active) setHeroImages(list);
+      })
+      .catch(() => {
+        // Hero collage is decorative; the page renders fine without it.
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const reduceMotion = useReducedMotion();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -108,13 +121,17 @@ const HeroFloatingBooks = () => {
 
   return (
     <div className="lp-hero-visual" onMouseMove={handleMouseMove} aria-hidden="true">
-      {HERO_IMAGES.map((src, index) => (
+      {heroImages.map(({ slot, updatedAt }) => (
         <motion.div
-          key={src}
-          className={`lp-float-card lp-float-${index + 1}`}
-          style={reduceMotion ? undefined : offsets[index]}
+          key={slot}
+          className={`lp-float-card lp-float-${slot}`}
+          style={reduceMotion ? undefined : offsets[slot - 1]}
         >
-          <img src={src} alt="" decoding="async" />
+          <img
+            src={`${API_BASE_URL}/landing-images/${slot}?v=${Date.parse(updatedAt) || 0}`}
+            alt=""
+            decoding="async"
+          />
         </motion.div>
       ))}
     </div>

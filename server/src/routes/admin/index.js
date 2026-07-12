@@ -28,6 +28,7 @@ import {
 import { getInventory } from "../../controllers/admin/inventoryController.js";
 import { getActivityLogs } from "../../controllers/admin/activityLogController.js";
 import { getSettings, updateSettings, updateReaders } from "../../controllers/admin/settingsController.js";
+import { uploadLandingImage } from "../../controllers/admin/landingImageController.js";
 import {
   getAdminSellers,
   createAdminSeller,
@@ -73,6 +74,7 @@ router.get("/activity-logs", getActivityLogs);
 router.get("/settings", getSettings);
 router.put("/settings", requireRole("developer"), updateSettings);
 router.put("/readers", updateReaders);
+router.put("/landing-images/:slot", uploadLandingImage);
 
 router.use("/users", adminUserRoutes);
 

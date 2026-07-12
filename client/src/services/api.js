@@ -58,6 +58,16 @@ export const sellerApi = {
   }
 };
 
+export const landingImageApi = {
+  async getImages() {
+    const res = await fetch(`${API_BASE_URL}/landing-images`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch landing images");
+    }
+    return res.json();
+  }
+};
+
 export const contactApi = {
   async submitContact(formData) {
     const res = await fetch(`${API_BASE_URL}/contact`, {
