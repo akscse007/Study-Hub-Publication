@@ -388,12 +388,15 @@
 }
 
 .lp-float-3 {
-  width: min(38%, 180px);
+  width: min(44%, 210px);
   aspect-ratio: 3 / 4;
   bottom: 0;
   left: 28%;
-  z-index: 1;
+  z-index: 4;
   animation-delay: -4.8s;
+  /* margin-top is a no-op on a bottom-anchored absolute box, so this card
+     mirrors lp-float via margin-bottom — identical motion, same timing. */
+  animation-name: lp-float-bottom;
 }
 
 @keyframes lp-float {
@@ -403,6 +406,16 @@
   }
   50% {
     margin-top: -16px;
+  }
+}
+
+@keyframes lp-float-bottom {
+  0%,
+  100% {
+    margin-bottom: 0;
+  }
+  50% {
+    margin-bottom: 16px;
   }
 }
 
