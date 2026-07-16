@@ -1124,6 +1124,9 @@ textarea:focus {
   color: #5f594e;
   line-height: 1.65;
   white-space: pre-line;
+  /* Admin-entered content can contain long unbroken URLs; without this they
+     force horizontal overflow on narrow screens. */
+  overflow-wrap: anywhere;
 }
 
 .announcements-empty {
@@ -1488,4 +1491,16 @@ textarea:focus {
 .seller-empty svg {
   font-size: 1.7rem;
   color: var(--brand-light);
+}
+
+/* Mobile only: iOS Safari auto-zooms the page when a focused form control's
+   font size is under 16px. The extra selectors beat the more specific
+   font-size overrides above (.nav-actions input). */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea,
+  .nav-actions input {
+    font-size: 16px;
+  }
 }

@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useForm } from "../hooks/useForm";
 import { adminBookApi } from "../services/api";
 import { parseImageList, getBookImages, getBookCover } from "../../utils/bookImages";
-import { FaEdit, FaTrash, FaPlus, FaSearch } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaFilter } from "react-icons/fa";
 
 const CATEGORIES = ["Pre School", "Nursery", "General Course", "Madhyamik", "H.S."];
+
+const filterCheckRow = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: "8px",
+  fontWeight: "normal",
+  // Comfortable touch target on mobile — rows would otherwise be ~18px tall.
+  padding: "6px 0"
+};
+
+const filterCheckBox = { width: "16px", height: "16px", flexShrink: 0, margin: 0 };
 
 const emptyBook = {
   title: "",
@@ -24,11 +36,29 @@ const emptyBook = {
 const Books = () => {
   const { data: books, loading, error, refetch } = useFetch(adminBookApi.getBooks);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [stockStatus, setStockStatus] = useState("");
+  // Per group: `selected` drives filtering (empty = no filtering); `all` is an
+  // explicit UI selection, mutually exclusive with `selected` entries.
+  const [filters, setFilters] = useState({
+    categories: { all: true, selected: [] },
+    stocks: { all: true, selected: [] },
+    tags: { all: true, selected: [] }
+  });
+  const [draftFilters, setDraftFilters] = useState(filters);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
   const { values, setValues, handleChange, reset } = useForm(emptyBook);
+
+  // Lock background scrolling while the filter panel is open (mobile scroll
+  // chaining would otherwise move the page behind the overlay).
+  useEffect(() => {
+    if (!isFilterOpen) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isFilterOpen]);
 
   const openCreate = () => {
     setEditingBook(null);
@@ -99,15 +129,33 @@ const Books = () => {
     }
   };
 
-  const applyFilters = async () => {
-    const params = {};
-    if (search.trim()) params.search = search.trim();
-    if (category) params.category = category;
-    if (stockStatus) params.stockStatus = stockStatus;
-    // useFetch doesn't support dynamic fetcher args easily, refetch uses initial fetcher
-    // workaround: reload with query string via window or keep simple local filter
-    // For now, refetch all and filter client-side
-    await refetch();
+  const openFilters = () => {
+    setDraftFilters(filters);
+    setIsFilterOpen(true);
+  };
+
+  const applyFilters = () => {
+    setFilters(draftFilters);
+    setIsFilterOpen(false);
+  };
+
+  const toggleDraft = (group, value) => {
+    setDraftFilters((draft) => {
+      const { selected } = draft[group];
+      return {
+        ...draft,
+        [group]: selected.includes(value)
+          ? { ...draft[group], selected: selected.filter((v) => v !== value) }
+          : { all: false, selected: [...selected, value] }
+      };
+    });
+  };
+
+  const selectAllDraft = (group) => {
+    setDraftFilters((draft) => ({
+      ...draft,
+      [group]: { all: true, selected: [] }
+    }));
   };
 
   const filteredBooks = (books || []).filter((book) => {
@@ -116,12 +164,23 @@ const Books = () => {
       book.title.toLowerCase().includes(search.toLowerCase()) ||
       (book.author || "").toLowerCase().includes(search.toLowerCase()) ||
       (book.isbn || "").toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = !category || book.category === category;
+    const matchesCategory =
+      !filters.categories.selected.length || filters.categories.selected.includes(book.category);
     const matchesStock =
-      !stockStatus ||
-      (stockStatus === "low" && book.stock > 0 && book.stock <= 5) ||
-      (stockStatus === "out" && book.stock === 0);
-    return matchesSearch && matchesCategory && matchesStock;
+      !filters.stocks.selected.length ||
+      filters.stocks.selected.some(
+        (s) =>
+          (s === "low" && book.stock > 0 && book.stock <= 5) ||
+          (s === "out" && book.stock === 0)
+      );
+    const matchesTag =
+      !filters.tags.selected.length ||
+      filters.tags.selected.some(
+        (t) =>
+          (t === "bestseller" && book.isBestSeller) ||
+          (t === "featured" && book.isFeatured)
+      );
+    return matchesSearch && matchesCategory && matchesStock && matchesTag;
   });
 
   if (loading) return <p className="empty-state">Loading books...</p>;
@@ -147,31 +206,8 @@ const Books = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <select
-              className="admin-select"
-              aria-label="Filter by category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All categories</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <select
-              className="admin-select"
-              aria-label="Filter by stock status"
-              value={stockStatus}
-              onChange={(e) => setStockStatus(e.target.value)}
-            >
-              <option value="">All stock</option>
-              <option value="low">Low stock</option>
-              <option value="out">Out of stock</option>
-            </select>
-            <button className="btn btn-secondary btn-sm" onClick={applyFilters}>
-              <FaSearch /> Filter
+            <button className="btn btn-secondary btn-sm" onClick={openFilters}>
+              <FaFilter /> Filter
             </button>
           </div>
         </div>
@@ -216,6 +252,81 @@ const Books = () => {
           </table>
         </div>
       </div>
+
+      {isFilterOpen && (
+        <div className="modal-overlay" onClick={() => setIsFilterOpen(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Filters</h3>
+              <button className="icon-btn" onClick={() => setIsFilterOpen(false)}>
+                ×
+              </button>
+            </div>
+            <div className="modal-body admin-form">
+              {[
+                {
+                  group: "categories",
+                  title: "Category",
+                  allLabel: "All categories",
+                  options: CATEGORIES.map((c) => ({ value: c, label: c }))
+                },
+                {
+                  group: "stocks",
+                  title: "Stock",
+                  allLabel: "All stock",
+                  options: [
+                    { value: "low", label: "Low stock" },
+                    { value: "out", label: "Out of stock" }
+                  ]
+                },
+                {
+                  group: "tags",
+                  title: "Tag",
+                  allLabel: "All tags",
+                  options: [
+                    { value: "bestseller", label: "Best Seller" },
+                    { value: "featured", label: "Featured" }
+                  ]
+                }
+              ].map(({ group, title, allLabel, options }) => (
+                <fieldset key={group} className="form-group" style={{ border: 0, padding: 0, margin: 0 }}>
+                  <legend style={{ padding: 0 }}>
+                    <label>{title}</label>
+                  </legend>
+                  <label style={filterCheckRow}>
+                    <input
+                      type="checkbox"
+                      style={filterCheckBox}
+                      checked={draftFilters[group].all}
+                      onChange={() => selectAllDraft(group)}
+                    />
+                    {allLabel}
+                  </label>
+                  {options.map(({ value, label }) => (
+                    <label key={value} style={filterCheckRow}>
+                      <input
+                        type="checkbox"
+                        style={filterCheckBox}
+                        checked={draftFilters[group].selected.includes(value)}
+                        onChange={() => toggleDraft(group, value)}
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </fieldset>
+              ))}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setIsFilterOpen(false)}>
+                Cancel
+              </button>
+              <button type="button" className="btn btn-primary" onClick={applyFilters}>
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>

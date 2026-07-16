@@ -784,6 +784,13 @@
     justify-content: center;
   }
 
+  /* Featured Books cards ~12% smaller on phones; 3/4 aspect ratio keeps
+     the cover height proportional automatically. */
+  .lp-book-grid .lp-book-card {
+    flex-basis: 210px;
+    min-width: 175px;
+  }
+
   .lp-hero-visual {
     min-height: 280px;
   }
