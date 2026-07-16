@@ -784,11 +784,20 @@
     justify-content: center;
   }
 
-  /* Featured Books cards ~12% smaller on phones; 3/4 aspect ratio keeps
-     the cover height proportional automatically. */
+  /* Featured Books cards keep full width on phones; only height shrinks
+     ~10%. Cover uses object-fit: cover, so the slightly shorter box crops
+     rather than squashes the image. */
   .lp-book-grid .lp-book-card {
-    flex-basis: 210px;
-    min-width: 175px;
+    flex-basis: 240px;
+    min-width: 200px;
+  }
+
+  .lp-book-cover {
+    aspect-ratio: 3 / 3.55;
+  }
+
+  .lp-book-info {
+    padding: 13px 18px 14px;
   }
 
   .lp-hero-visual {
