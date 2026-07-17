@@ -14,23 +14,23 @@ const links = [
 ];
 const infoCards = [
   {
-    title: "Delivery Across Bengal",
-    body: "We deliver to all major districts in West Bengal. Fast, reliable, and tracked shipping.",
+    title: "Delivery across Bengal and Tripura",
+    body: "We supply our books throughout the states of West Bengal and Tripura. Our objective is to ensure fast, reliable, and accurate delivery to you through meticulous verification.",
     icon: <FaTruck />
   },
   {
-    title: "Quality Assured",
-    body: "Every book undergoes rigorous editorial review by subject matter experts before publication.",
+    title: "Quality Assurance",
+    body: "Before publishing, our books undergo rigorous and repeated screening by our dedicated editorial team and subject matter experts.",
     icon: <FaCheckCircle />
   },
   {
-    title: "Easy Returns",
-    body: "Damaged or misprinted copies? We offer hassle-free replacement within 7 days.",
+    title: "Easy Return",
+    body: "Books will be accepted for return within 7 days. Please ensure that the books are kept undamaged or physically altered.",
     icon: <FaUndoAlt />
   },
   {
-    title: "Trusted by Schools",
-    body: "Adopted by over 500+ schools and tuition centres across the state.",
+    title: "Trusted by Teachers",
+    body: "Driven by the quality and innovation of our books, we are currently partnered with over 60 schools and nearly 240+ private coaching centers across the state.",
     icon: <FaSchool />
   }
 ];

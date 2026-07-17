@@ -621,6 +621,11 @@ textarea:focus {
   color: #8a7f6b;
 }
 
+.details-card .book-author {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .book-rating {
   margin: 0;
   color: #a17111;
@@ -712,6 +717,182 @@ textarea:focus {
   justify-content: space-between;
   font-size: 0.82rem;
   color: #5f4820;
+}
+
+.privacy-page {
+  padding: 26px 22px;
+}
+
+.privacy-page h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+.privacy-page > p:first-of-type {
+  text-align: center;
+  margin: 0 auto 10px;
+  max-width: 640px;
+}
+
+.privacy-page h3 {
+  margin: 24px 0 8px;
+  font-size: 1.15rem;
+}
+
+.privacy-page p {
+  margin: 0 0 12px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.media-card-list {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.media-card {
+  background: #f5f1e8;
+  border: 1px solid #e2d5bb;
+  border-radius: 8px;
+  padding: 16px 15px;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  color: inherit;
+}
+
+.media-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #eee3cf;
+  color: #6d5322;
+  font-size: 1.3rem;
+}
+
+.media-card h4 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #47391e;
+}
+
+.media-card p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #7e7464;
+}
+
+.media-card > div {
+  min-width: 0;
+}
+
+.media-card .media-card-detail {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5f4820;
+  overflow-wrap: anywhere;
+}
+
+.dev-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.dev-card {
+  background: #f5f1e8;
+  border: 1px solid #e2d5bb;
+  border-radius: 8px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.dev-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee3cf;
+  border: 1px solid #e2d5bb;
+}
+
+.dev-card h4 {
+  margin: 2px 0 0;
+  font-size: 0.95rem;
+  color: #47391e;
+}
+
+.dev-card .dev-role {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff6e6;
+  font-size: 0.76rem;
+  font-weight: 600;
+  max-width: 100%;
+  text-align: center;
+}
+
+.dev-card p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #7e7464;
+}
+
+.dev-card .dev-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid #e2d5bb;
+  background: #eee3cf;
+  font-size: 0.76rem;
+  color: #6d5322;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.dev-links {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dev-links .btn-secondary {
+  padding: 7px 12px;
+  font-size: 0.76rem;
+}
+
+.dev-footer-note {
+  margin-top: 22px;
+  border-top: 1px solid #e2d5bb;
+  padding-top: 14px;
+  text-align: center;
+}
+
+.dev-footer-note p {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  color: #7e7464;
 }
 
 .contact-preview-grid,
@@ -955,6 +1136,34 @@ textarea:focus {
   margin: 6px 0 0;
   font-size: 0.73rem;
   color: #c8e6c9;
+}
+
+.footer-dev-link {
+  width: min(1220px, 92%);
+  margin: 0 auto;
+  padding-bottom: 10px;
+  font-size: 0.82rem;
+}
+
+.footer-dev-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #f8f3e9;
+  border: 1px solid var(--brand);
+  color: var(--brand);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.footer-dev-link a:hover,
+.footer-dev-link a:focus-visible {
+  background: var(--brand);
+  color: #fff6e6;
+  text-decoration: none;
 }
 
 .footer-bottom-row {
@@ -1502,5 +1711,19 @@ textarea:focus {
   textarea,
   .nav-actions input {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dev-links .btn-secondary {
+    padding: 10px 16px;
+  }
+
+  .footer-dev-link a {
+    padding: 9px 18px;
+  }
+
+  .media-card {
+    padding: 15px 13px;
   }
 }

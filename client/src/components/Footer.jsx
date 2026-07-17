@@ -96,6 +96,9 @@ const Footer = () => {
           {message ? <p className="subscribe-message">{message}</p> : null}
         </div>
       </div>
+      <div className="footer-dev-link">
+        <Link to="/developers">About Developers</Link>
+      </div>
       <div className="footer-bottom-row">
         <p className="footer-note">© {new Date().getFullYear()} {settings.publicationName}. All rights reserved.</p>
         <div>

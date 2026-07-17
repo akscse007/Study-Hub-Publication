@@ -13,6 +13,7 @@ import MediaPage from "../pages/MediaPage";
 import SellerInfoPage from "../pages/SellerInfoPage";
 import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 import DisclaimerPage from "../pages/DisclaimerPage";
+import DevelopersPage from "../pages/DevelopersPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 import AdminLayout from "../admin/components/Layout";
@@ -56,6 +57,7 @@ const AppRoutes = () => {
         <Route path="/seller-information" element={<SellerInfoPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/disclaimer" element={<DisclaimerPage />} />
+        <Route path="/developers" element={<DevelopersPage />} />
         <Route path="/admin/login" element={<Login />} />
       </Route>
 
