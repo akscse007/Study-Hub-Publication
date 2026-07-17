@@ -4,10 +4,10 @@ import { fadeUp, staggerContainer, viewportConfig } from "../components/motion";
 import { useSettings } from "../context/SettingsContext";
 
 // Dummy Images (Replace Later)
-import developer3 from "../developers/akash.PNG";
-import developer2 from "../developers/sounil.JPEG";
-import developer1 from "../developers/rwita.JPEG";
-import developer4 from "../developers/soham.JPEG";
+import developer3 from "../developers/akash.png";
+import developer2 from "../developers/sounil.jpeg";
+import developer1 from "../developers/rwita.jpeg";
+import developer4 from "../developers/soham.jpeg";
 
 const DEVELOPERS = [
   {
