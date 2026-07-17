@@ -9,6 +9,13 @@
     />
     <link rel="icon" type="image/png" href="/logo.png" />
     <title>Study-Hub Publication</title>
+    <script>
+      // Must run before the browser's (async, deferred on mobile) scroll
+      // restoration — setting it in the JS bundle is too late on slow loads,
+      // which let Chrome/Safari re-apply the old scroll offset after render.
+      // ScrollToTop.jsx owns per-route scroll positioning from here on.
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    </script>
   </head>
   <body>
     <div id="root"></div>
