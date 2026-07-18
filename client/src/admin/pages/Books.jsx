@@ -407,7 +407,7 @@ const Books = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="book-description">Description</label>
-                  <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} required />
+                  <textarea id="book-description" className="admin-textarea" name="description" value={values.description} onChange={handleChange} />
                 </div>
                 <div className="form-row" style={{ gridTemplateColumns: "repeat(2, minmax(0, auto))", justifyContent: "start" }}>
                   <label className="form-group" style={{ flexDirection: "row", alignItems: "center", gap: "8px" }}>

@@ -57,6 +57,8 @@ export const createAdminBook = async (req, res, next) => {
     if (typeof payload.isbn === "string" && !payload.isbn.trim()) delete payload.isbn;
     // Author is optional; don't store empty strings.
     if (typeof payload.author === "string" && !payload.author.trim()) delete payload.author;
+    // Description is optional; don't store empty strings.
+    if (typeof payload.description === "string" && !payload.description.trim()) delete payload.description;
     const book = await Book.create(payload);
     broadcastNotification("new-book", {
       title: "New book released",
@@ -91,6 +93,11 @@ export const updateAdminBook = async (req, res, next) => {
     if (typeof update.author === "string" && !update.author.trim()) {
       delete update.author;
       update.$unset = { ...update.$unset, author: 1 };
+    }
+    // Description is optional; clearing it removes the field instead of storing "".
+    if (typeof update.description === "string" && !update.description.trim()) {
+      delete update.description;
+      update.$unset = { ...update.$unset, description: 1 };
     }
     const book = await Book.findByIdAndUpdate(req.params.id, update, {
       new: true,

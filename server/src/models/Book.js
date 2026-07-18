@@ -7,7 +7,7 @@ const bookSchema = new mongoose.Schema(
     bookId: { type: Number, index: true },
     title: { type: String, required: true, trim: true },
     author: { type: String, trim: true },
-    description: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
     // Optional; sparse unique so multiple books may omit it.
     isbn: { type: String, trim: true, index: { unique: true, sparse: true } },
     rating: { type: Number, min: 0, max: 5, default: 0 },
