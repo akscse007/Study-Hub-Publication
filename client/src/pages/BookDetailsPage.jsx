@@ -26,8 +26,6 @@ const EXCLUDED_DETAIL_FIELDS = new Set([
   "searchCount",
   "isActive",
   "isFeatured",
-  // Legacy flag; may linger on old documents until the removeIsLanding script runs.
-  "isLanding",
   "isBestSeller",
   "createdAt",
   "updatedAt",

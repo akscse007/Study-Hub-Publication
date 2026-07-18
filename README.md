@@ -27,7 +27,6 @@ Other commands:
 - `npm run build` — production build of the client (output in `client/dist/`)
 - `npm start` — production server
 - `node server/src/scripts/testSmtp.js` — verify SMTP configuration
-- `node server/src/scripts/fixIsbnIndex.js` — one-time migration for databases created before ISBN became optional (replaces the unique ISBN index with a sparse one)
 
 ## Environment variables
 

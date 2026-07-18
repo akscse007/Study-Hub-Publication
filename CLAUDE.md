@@ -17,7 +17,6 @@ Run from repo root:
 - `npm run seed` — seed books from `server/src/data/seedBooks.js`
 - `npm run seed:admin` — seed admin users
 - `node server/src/scripts/testSmtp.js` — verify SMTP config
-- `node server/src/scripts/fixIsbnIndex.js` — one-time migration for pre-existing databases: replaces the old non-sparse unique `isbn_1` index with the sparse one the Book schema now declares (ISBN became optional)
 
 Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_URL`, `JWT_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`. Startup fails hard if either the SMTP connection or MongoDB connection fails (see `server/src/index.js` `startServer`).
 
@@ -46,7 +45,7 @@ Author names on public pages render inside the `.author-chip` pill (`styles.css`
 - Required fields: `title`, `author`, `description`, `category`, `image`, `price`. `isbn` and `rating` are optional (`rating` defaults to 0).
 - `isbn` has a **sparse** unique index; empty-string ISBNs must never be stored — the admin book controller deletes an empty `isbn` on create and `$unset`s it on update.
 - `bookId` is an internal auto-increment number assigned by a `pre("save")` hook using the `Counter` model (`server/src/models/Counter.js`). It is stripped from every API response by `withImages` — never expose or display it. Bulk inserts skip save hooks, which is why `seed.js` uses `Book.create()`, not `insertMany()`.
-- `isFeatured` (boolean) is the admin-controlled "Featured" flag, independent of `isBestSeller`; it alone decides what appears in the landing page Featured Books section. The former separate `isLanding` flag was merged into it (`server/src/scripts/removeIsLanding.js` migrates old databases).
+- `isFeatured` (boolean) is the admin-controlled "Featured" flag, independent of `isBestSeller`; it alone decides what appears in the landing page Featured Books section.
 
 ### Two API clients
 
