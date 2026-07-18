@@ -16,7 +16,7 @@ import BrandLogo from "../components/BrandLogo";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 import { useBooks } from "../hooks/useBooks";
 import { fadeUp, staggerContainer } from "../components/motion";
-import { getBookCover, getCoverImageProps } from "../utils/bookImages";
+import { getBookCover, getCoverImageProps, markPortraitImage } from "../utils/bookImages";
 import { isNewBook } from "../utils/isNewBook";
 import { buildContactMailto, formatWhatsAppForLink } from "../utils/contactFormatters";
 import { landingImageApi } from "../services/api";
@@ -29,13 +29,17 @@ const LandingBookCard = ({ book }) => (
   <motion.article className="lp-book-card" variants={fadeUp}>
     <Link to={`/books/${book._id}`} className="lp-book-link" aria-label={`View details for ${book.title}`}>
       <div className="lp-book-cover">
-        <img {...getCoverImageProps(getBookCover(book))} alt={book.title} loading="lazy" />
+        <img {...getCoverImageProps(getBookCover(book))} alt={book.title} loading="lazy" onLoad={markPortraitImage} />
         <span className="lp-book-category">{book.category}</span>
         {isNewBook(book) && <span className="lp-book-new">New</span>}
       </div>
       <div className="lp-book-info">
         <h3>{book.title}</h3>
-        <p>{book.author}</p>
+        {book.author ? (
+          <p>
+            <span className="author-chip">{book.author}</span>
+          </p>
+        ) : null}
         <span className="lp-book-rating" aria-label={`Rated ${Number(book.rating).toFixed(1)} out of 5`}>
           <FaStar aria-hidden="true" /> {Number(book.rating).toFixed(1)}
         </span>

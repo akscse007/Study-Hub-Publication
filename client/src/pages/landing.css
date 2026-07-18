@@ -519,6 +519,11 @@
   transition: transform 0.4s ease;
 }
 
+/* Portrait covers are flagged at load (markPortraitImage) and shown in full. */
+.lp-book-cover img.cover-portrait {
+  object-fit: contain;
+}
+
 .lp-book-new {
   position: absolute;
   top: 12px;

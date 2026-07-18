@@ -11,7 +11,7 @@ import { bookApi } from "../services/api";
 import { fadeUp, viewportConfig } from "../components/motion";
 import { useSettings } from "../context/SettingsContext";
 import { buildWhatsAppUrl, trackWhatsAppLead } from "../utils/whatsappLead";
-import { getBookImages, getCoverImageProps } from "../utils/bookImages";
+import { getBookImages, getCoverImageProps, markPortraitImage } from "../utils/bookImages";
 
 // Details column is 340px on desktop (.details-layout), full-width on mobile.
 const DETAILS_SIZES = "(max-width: 760px) 92vw, 340px";
@@ -136,7 +136,7 @@ const BookDetailsPage = () => {
       <div className="container details-layout">
         <div className="details-image-wrap">
           {images.length <= 1 ? (
-            <img {...getCoverImageProps(images[0] || book.image, DETAILS_SIZES)} alt={book.title} className="details-image" />
+            <img {...getCoverImageProps(images[0] || book.image, DETAILS_SIZES)} alt={book.title} className="details-image" onLoad={markPortraitImage} />
           ) : (
             <Swiper
               modules={[Autoplay, Navigation, Pagination]}
@@ -154,6 +154,7 @@ const BookDetailsPage = () => {
                     alt={`${book.title} — cover ${index + 1} of ${images.length}`}
                     className="details-image"
                     loading={index === 0 ? "eager" : "lazy"}
+                    onLoad={markPortraitImage}
                   />
                 </SwiperSlide>
               ))}
@@ -171,7 +172,9 @@ const BookDetailsPage = () => {
             </div>
           )}
           {isValidDisplayValue(book.author) && (
-            <p className="book-author">Author: {book.author}</p>
+            <p className="book-author">
+              Author: <span className="author-chip">{book.author}</span>
+            </p>
           )}
           {isValidDisplayValue(book.rating) && (
             <p className="book-rating">

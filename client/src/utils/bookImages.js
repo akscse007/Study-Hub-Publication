@@ -46,6 +46,14 @@ export const optimizeCloudinaryUrl = (url, width = 400) => {
   return `${url.slice(0, insertAt)}c_limit,w_${width},q_auto,f_auto/${url.slice(insertAt)}`;
 };
 
+// onLoad handler: flags portrait images so CSS switches them to
+// object-fit: contain (full cover visible, never cropped); landscape
+// images keep the default center-crop fill.
+export const markPortraitImage = (event) => {
+  const img = event.currentTarget;
+  if (img.naturalHeight > img.naturalWidth) img.classList.add("cover-portrait");
+};
+
 const COVER_WIDTHS = [250, 350, 400, 600];
 
 // Card widths across breakpoints: 1-col mobile → 6-col desktop grid (~180-240px).
