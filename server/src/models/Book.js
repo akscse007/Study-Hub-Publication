@@ -14,7 +14,7 @@ const bookSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Pre School", "Nursery", "General Course", "Madhyamik", "H.S."]
+      enum: ["Nursery", "Primary", "General Course", "Madhyamik", "H.S."]
     },
     image: { type: String, required: true },
     // Multiple cover images; `image` mirrors images[0] for backward compatibility.

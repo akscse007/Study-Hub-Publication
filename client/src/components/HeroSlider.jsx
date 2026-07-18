@@ -13,7 +13,7 @@ const HeroSlider = () => {
     {
       title: "Inspiring Minds,\nShaping Futures",
       subtitle: "New Arrivals 2024",
-      body: "Premium educational books for Pre-School through Higher Secondary — crafted by expert educators.",
+      body: "Premium educational books for Nursery through Higher Secondary — crafted by expert educators.",
       image:
         "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=2000&q=80"
     },

@@ -5,7 +5,7 @@ import { adminBookApi } from "../services/api";
 import { parseImageList, getBookImages, getBookCover } from "../../utils/bookImages";
 import { FaEdit, FaTrash, FaPlus, FaFilter } from "react-icons/fa";
 
-const CATEGORIES = ["Pre School", "Nursery", "General Course", "Madhyamik", "H.S."];
+const CATEGORIES = ["Nursery", "Primary", "General Course", "Madhyamik", "H.S."];
 
 const filterCheckRow = {
   display: "flex",

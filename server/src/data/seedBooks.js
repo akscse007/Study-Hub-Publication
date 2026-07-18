@@ -3,7 +3,7 @@ const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=900&q=80";
 
 const seedBooks = [
-  // ------------------------- Nursery -------------------------
+  // ------------------------- Primary -------------------------
   {
     title: "Cursive Writing - 0",
     category: "Nursery",
@@ -22,7 +22,7 @@ const seedBooks = [
   },
   {
     title: "Enjoy Rhymes - 1",
-    category: "Nursery",
+    category: "Primary",
     price: 140,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -30,7 +30,7 @@ const seedBooks = [
   },
   {
     title: "Enjoy Rhymes - 2",
-    category: "Nursery",
+    category: "Primary",
     price: 140,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -62,7 +62,7 @@ const seedBooks = [
   },
   {
     title: "Play and Create - 1",
-    category: "Nursery",
+    category: "Primary",
     price: 120,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -70,7 +70,7 @@ const seedBooks = [
   },
   {
     title: "Play and Create - 2",
-    category: "Nursery",
+    category: "Primary",
     price: 120,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -78,7 +78,7 @@ const seedBooks = [
   },
   {
     title: "Play and Create - 3",
-    category: "Nursery",
+    category: "Primary",
     price: 120,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -86,7 +86,7 @@ const seedBooks = [
   },
   {
     title: "Play and Create - 4",
-    category: "Nursery",
+    category: "Primary",
     price: 120,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,
@@ -94,7 +94,7 @@ const seedBooks = [
   },
   {
     title: "Play and Create - 5",
-    category: "Nursery",
+    category: "Primary",
     price: 120,
     image: PLACEHOLDER_IMAGE,
     isBestSeller: false,

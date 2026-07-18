@@ -5,8 +5,8 @@ import { FaBookOpen } from "react-icons/fa";
 import SectionHeader from "./SectionHeader";
 import { fadeUp, viewportConfig } from "./motion";
 const defaultCategories = [
-  { label: "Pre School", value: "Pre School", count: 0 },
   { label: "Nursery", value: "Nursery", count: 0 },
+  { label: "Primary", value: "Primary", count: 0 },
   { label: "General Course", value: "General Course", count: 0 },
   { label: "Madhyamik", value: "Madhyamik", count: 0 },
   { label: "Higher Secondary", value: "H.S.", count: 0 }
