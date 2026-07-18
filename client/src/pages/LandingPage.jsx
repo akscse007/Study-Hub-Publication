@@ -16,7 +16,7 @@ import BrandLogo from "../components/BrandLogo";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 import { useBooks } from "../hooks/useBooks";
 import { fadeUp, staggerContainer } from "../components/motion";
-import { getBookCover } from "../utils/bookImages";
+import { getBookCover, getCoverImageProps } from "../utils/bookImages";
 import { isNewBook } from "../utils/isNewBook";
 import { buildContactMailto, formatWhatsAppForLink } from "../utils/contactFormatters";
 import { landingImageApi } from "../services/api";
@@ -29,7 +29,7 @@ const LandingBookCard = ({ book }) => (
   <motion.article className="lp-book-card" variants={fadeUp}>
     <Link to={`/books/${book._id}`} className="lp-book-link" aria-label={`View details for ${book.title}`}>
       <div className="lp-book-cover">
-        <img src={getBookCover(book)} alt={book.title} loading="lazy" />
+        <img {...getCoverImageProps(getBookCover(book))} alt={book.title} loading="lazy" />
         <span className="lp-book-category">{book.category}</span>
         {isNewBook(book) && <span className="lp-book-new">New</span>}
       </div>

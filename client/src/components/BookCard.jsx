@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { useSettings } from "../context/SettingsContext";
 import { buildWhatsAppUrl, trackWhatsAppLead } from "../utils/whatsappLead";
-import { getBookCover } from "../utils/bookImages";
+import { getBookCover, getCoverImageProps } from "../utils/bookImages";
 import { isNewBook } from "../utils/isNewBook";
 
 const BookCard = ({ book }) => {
@@ -31,7 +31,7 @@ const BookCard = ({ book }) => {
           {isNewBook(book) ? <span className="book-badge-new">New</span> : null}
           <span className="book-category-badge">{book.category}</span>
           <Link to={`/books/${book._id}`}>
-            <img src={getBookCover(book)} alt={book.title} loading="lazy" />
+            <img {...getCoverImageProps(getBookCover(book))} alt={book.title} loading="lazy" />
           </Link>
         </div>
         <div className="book-card-content">
