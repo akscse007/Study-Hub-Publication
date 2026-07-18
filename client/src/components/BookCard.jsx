@@ -41,12 +41,14 @@ const BookCard = ({ book }) => {
               <span className="author-chip">{book.author}</span>
             </p>
           ) : null}
-          <p className="book-rating">
-            <FaStar /> {book.rating.toFixed(1)}
-          </p>
-          <a href={whatsappUrl} className="book-btn" target="_blank" rel="noreferrer" onClick={handleWhatsAppClick}>
-            Enquire on WhatsApp
-          </a>
+          <div className="book-card-bottom">
+            <p className="book-rating">
+              <FaStar /> {book.rating.toFixed(1)}
+            </p>
+            <a href={whatsappUrl} className="book-btn" target="_blank" rel="noreferrer" onClick={handleWhatsAppClick}>
+              Enquire on WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </motion.article>

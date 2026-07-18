@@ -27,6 +27,7 @@ const EXCLUDED_DETAIL_FIELDS = new Set([
   "isActive",
   "isFeatured",
   "isBestSeller",
+  "stock",
   "createdAt",
   "updatedAt",
 ]);

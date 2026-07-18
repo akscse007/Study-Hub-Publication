@@ -35,7 +35,7 @@ const DisclaimerPage = () => {
         </p>
 
         <p>
-          <strong>Availability of books</strong> is subject to stock and distribution
+          <strong>Availability of books</strong> is subject to availability and distribution
           conditions. Orders and enquiries received through this website do not
           constitute a confirmed sale until verified by Study-Hub Publication.
         </p>
