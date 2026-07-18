@@ -99,7 +99,7 @@ Never commit `server/.env`. It is listed in `.gitignore`; if a copy was ever com
 
 ### Cloudinary
 
-Not used. Book images are external URLs pasted by the admin (any HTTPS image host works, including Cloudinary URLs). The only upload pipeline is the landing page hero images, which are converted to WEBP (sharp) and stored in MongoDB — deliberately DB-backed so they survive redeploys on hosts with ephemeral filesystems (e.g. Render); no Cloudinary credentials exist in this project.
+No account or credentials required. Book images are external URLs pasted by the admin (any HTTPS image host works). When a pasted URL happens to be a Cloudinary delivery URL, the public site automatically rewrites it at render time into optimized variants — `c_limit` (fit, never crop/upscale), `q_auto`, `f_auto`, plus a responsive `srcset` (250–600px widths) so each device downloads only the size it needs. The URL stored in MongoDB is never changed; non-Cloudinary URLs render as-is. The only upload pipeline is the landing page hero images, which are converted to WEBP (sharp) and stored in MongoDB — deliberately DB-backed so they survive redeploys on hosts with ephemeral filesystems (e.g. Render).
 
 ## Architecture
 
