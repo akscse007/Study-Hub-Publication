@@ -80,7 +80,7 @@ const AppRoutes = () => {
         <Route
           path="settings"
           element={
-            <ProtectedRoute minRole="developer">
+            <ProtectedRoute minRole="superadmin">
               <Settings />
             </ProtectedRoute>
           }

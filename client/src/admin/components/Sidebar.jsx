@@ -29,7 +29,7 @@ const baseMenu = [
 
 const roleMenu = [
   { path: "/admin/users", label: "Admin Users", icon: FaUserShield, minRole: "subadmin" },
-  { path: "/admin/settings", label: "Settings", icon: FaCog, minRole: "developer" }
+  { path: "/admin/settings", label: "Settings", icon: FaCog, minRole: "superadmin" }
 ];
 
 const Sidebar = ({ open = false }) => {

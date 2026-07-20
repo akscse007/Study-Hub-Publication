@@ -72,7 +72,7 @@ router.get("/inventory", getInventory);
 router.get("/activity-logs", getActivityLogs);
 
 router.get("/settings", getSettings);
-router.put("/settings", requireRole("developer"), updateSettings);
+router.put("/settings", requireRole("superadmin"), updateSettings);
 router.put("/readers", updateReaders);
 router.put("/landing-images/:slot", uploadLandingImage);
 
