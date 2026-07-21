@@ -16,11 +16,6 @@ import {
   deleteAnnouncement
 } from "../../controllers/admin/announcementController.js";
 import {
-  getEnquiries,
-  updateEnquiryStatus,
-  deleteEnquiry
-} from "../../controllers/admin/enquiryController.js";
-import {
   getWhatsAppLeads,
   updateWhatsAppLeadStatus,
   deleteWhatsAppLead
@@ -58,10 +53,6 @@ router.get("/sellers", getAdminSellers);
 router.post("/sellers", createAdminSeller);
 router.put("/sellers/:id", updateAdminSeller);
 router.delete("/sellers/:id", deleteAdminSeller);
-
-router.get("/enquiries", getEnquiries);
-router.patch("/enquiries/:id/status", updateEnquiryStatus);
-router.delete("/enquiries/:id", deleteEnquiry);
 
 router.get("/whatsapp-leads", getWhatsAppLeads);
 router.patch("/whatsapp-leads/:id/status", updateWhatsAppLeadStatus);

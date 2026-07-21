@@ -2,7 +2,7 @@ import Book from "../../models/Book.js";
 import { logActivity } from "../../utils/activityLogger.js";
 import { normalizeBookImagesInput, withImages } from "../../utils/bookImages.js";
 import { asString, escapeRegex } from "../../utils/sanitize.js";
-import { broadcastNotification, notifySubscribersAboutBook } from "../notificationController.js";
+import { broadcastNotification } from "../notificationController.js";
 
 // Malformed numerics (NaN/null from older documents or buggy clients) otherwise
 // surface as a Mongoose CastError → generic 500.
@@ -66,7 +66,6 @@ export const createAdminBook = async (req, res, next) => {
       bookId: book._id
     });
     broadcastNotification("books-updated", { reason: "new-book" });
-    notifySubscribersAboutBook(book);
     await logActivity("Created book", "Book", book._id.toString(), book.title);
     return res.status(201).json(withImages(book));
   } catch (error) {

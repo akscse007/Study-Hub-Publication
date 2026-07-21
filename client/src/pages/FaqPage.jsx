@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { fadeUp, viewportConfig } from "../components/motion";
 
 const faqs = [
-  { q: "How can I order books in bulk?", a: "Contact us through phone, WhatsApp, or the contact form for institutional orders." },
+  { q: "How can I order books in bulk?", a: "Contact us through phone, WhatsApp, or email for institutional orders." },
   { q: "Do you publish curriculum-specific books?", a: "Yes, we provide books aligned to key school board and course requirements." },
   { q: "Can I become a seller partner?", a: "Yes. Visit Seller Information page and submit your partnership request." }
 ];

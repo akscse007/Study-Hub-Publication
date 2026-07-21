@@ -16,9 +16,8 @@ Run from repo root:
 - `npm start` — production server (`node src/index.js`)
 - `npm run seed` — seed books from `server/src/data/seedBooks.js`
 - `npm run seed:admin` — seed admin users
-- `node server/src/scripts/testSmtp.js` — verify SMTP config
 
-Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_URL`, `JWT_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`. Startup fails hard if either the SMTP connection or MongoDB connection fails (see `server/src/index.js` `startServer`).
+Server requires `server/.env` with: `PORT`, `MONGODB_URI`, `CLIENT_URL`, `ADMIN_URL`, `JWT_SECRET`. Startup fails hard if the MongoDB connection fails (see `server/src/index.js` `startServer`).
 
 ## Architecture
 
@@ -56,7 +55,7 @@ The API base URL is centralized in `client/src/config.js` (exports `API_BASE_URL
 
 ### Server layering
 
-Standard routes → controllers → Mongoose models. Public routes are mounted individually under `/api/*` (`books`, `announcements` — published only, `sellers`, `enquiries`, `contact`, `whatsapp-leads`, `notifications`, `settings`, `auth`). All admin routes are aggregated in `server/src/routes/admin/index.js`, mounted at `/api/admin`, with JWT `authenticate` middleware applied router-wide — individual admin routes only add role checks where needed. Admin controllers live in `server/src/controllers/admin/`, separate from public controllers that may share the same model (e.g. `bookController.js` exists in both).
+Standard routes → controllers → Mongoose models. Public routes are mounted individually under `/api/*` (`books`, `announcements` — published only, `sellers`, `whatsapp-leads`, `notifications`, `settings`, `auth`). All admin routes are aggregated in `server/src/routes/admin/index.js`, mounted at `/api/admin`, with JWT `authenticate` middleware applied router-wide — individual admin routes only add role checks where needed. Admin controllers live in `server/src/controllers/admin/`, separate from public controllers that may share the same model (e.g. `bookController.js` exists in both).
 
 ### Roles and auth
 
@@ -68,7 +67,6 @@ Role hierarchy (rank order): `subadmin` < `superadmin` < `developer` — defined
 - The public site holds an SSE connection to `/api/notifications/stream` (`client/src/services/notifications.js`, opened in `main.jsx`): `books-updated` events trigger live catalogue refresh, `new-book` events fire browser Notifications. Server side lives in `server/src/controllers/notificationController.js`, which also handles email subscriptions.
 - Admin actions and auth events are recorded via the `ActivityLog` model (`server/src/utils/activityLogger.js`), surfaced in the admin Activity Logs page.
 - Seller information is fully dynamic: the `Seller` model stores a GeoJSON `location` point with a 2dsphere index; `GET /api/sellers?lat=&lng=` (and the admin equivalent) orders results by `$geoNear` proximity via shared helpers in `server/src/utils/sellers.js` (payload validation lives there too). Client-side, geocoding/autocomplete goes through Nominatim (`client/src/utils/geocode.js` + `client/src/components/LocationAutocomplete.jsx`, shared by the public Seller Information page and the admin Sellers page) — searches are debounced 450ms to respect Nominatim's 1 req/s policy.
-- Email goes through `server/src/utils/emailService.js` (nodemailer).
 - Site-wide editable settings/content are stored in the `Settings` model (one blob under `key: "publication"`) and exposed publicly via `/api/settings`, consumed client-side through `SettingsContext`. Keys: `publicationName`, `tagline`, `address`, `phone`, `email`, `facebook`, `instagram`, `youtube`, `whatsappNumber`, `readers`. Adding a key means touching four default objects: both server settings controllers, `SettingsContext.jsx`, and the admin Settings form. GET responses merge stored values over defaults; `updateSettings` merges the whitelisted body over the stored blob (so keys saved elsewhere survive).
 - `readers` (the landing page "Total Readers" figure, a free-form string like "1 Lakh+") is edited on the admin **Landing Page** page (file still `client/src/admin/pages/Readers.jsx`, route still `/admin/readers`) via `PUT /api/admin/readers` — open to any authenticated admin, while `PUT /api/admin/settings` stays developer-only.
 - **Landing hero images** are admin-uploaded, one per slot (1–3), from the same admin Landing Page page. Server: `LandingImage` model stores the optimized WEBP **binary in MongoDB** (deliberate — survives ephemeral-filesystem redeploys; an upsert per slot means old bytes are discarded atomically, never accumulated). Upload via `PUT /api/admin/landing-images/:slot` (multipart field `image`; multer memory storage, 10 MB cap, JPG/JPEG/PNG/WEBP only; sharp converts to WEBP q80, max width 1200 — originals are never stored). Public: `GET /api/landing-images` returns `[{slot, updatedAt}]`, `GET /api/landing-images/:slot` serves the binary with a day-long cache; clients append `?v=<updatedAt>` to bust caches on replacement. There are no static hero assets — `client/src/assets/landing/` was removed; `HeroFloatingBooks` in `LandingPage.jsx` fetches the list at runtime. The admin API `request` wrapper skips the JSON `Content-Type` header for `FormData` bodies.

@@ -1,6 +1,6 @@
 import { useFetch } from "../hooks/useFetch";
 import { statsApi } from "../services/api";
-import { FaBook, FaQuestionCircle, FaWhatsapp, FaBullhorn } from "react-icons/fa";
+import { FaBook, FaWhatsapp, FaBullhorn } from "react-icons/fa";
 
 const formatDate = (date) =>
   new Date(date).toLocaleString("en-IN", {
@@ -19,7 +19,6 @@ const Dashboard = () => {
 
   const stats = [
     { label: "Total Books", value: data.totalBooks, icon: FaBook },
-    { label: "Total Enquiries", value: data.totalEnquiries, icon: FaQuestionCircle },
     { label: "WhatsApp Contacts", value: data.totalWhatsAppContacts, icon: FaWhatsapp },
     { label: "Announcements", value: data.totalAnnouncements, icon: FaBullhorn }
   ];

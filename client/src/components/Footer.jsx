@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaBell, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
-import { useNotifications } from "../hooks/useNotifications";
+import { FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import { useSettings } from "../context/SettingsContext";
 import { formatWhatsAppForLink } from "../utils/contactFormatters";
 import { BOOK_CATEGORIES } from "../constants/categories";
@@ -16,13 +15,6 @@ const Footer = () => {
     { path: "/media", label: "Media" },
     { path: "/seller-information", label: "Seller Information" }
   ];
-
-  const { email, setEmail, status, message, subscribeEmail } = useNotifications();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    subscribeEmail();
-  };
 
   return (
     <footer className="footer">
@@ -79,25 +71,11 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h4>Stay Updated</h4>
-          <p>Get notified about new books and releases.</p>
-          <form className="subscribe-box" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={status === "loading"}>
-              <FaBell /> {status === "loading" ? "Subscribing..." : "Notify me"}
-            </button>
-          </form>
-          {message ? <p className="subscribe-message">{message}</p> : null}
+          <h4>About Developer</h4>
+          <div className="footer-dev-link">
+            <Link to="/developers">About Developers</Link>
+          </div>
         </div>
-      </div>
-      <div className="footer-dev-link">
-        <Link to="/developers">About Developers</Link>
       </div>
       <div className="footer-bottom-row">
         <p className="footer-note">© {new Date().getFullYear()} {settings.publicationName}. All rights reserved.</p>

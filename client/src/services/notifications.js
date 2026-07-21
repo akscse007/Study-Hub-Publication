@@ -31,14 +31,3 @@ export const connectNotificationStream = () => {
     setTimeout(connectNotificationStream, 5000);
   });
 };
-
-export const subscribeEmail = async (email) => {
-  const res = await fetch(`${API_BASE_URL}/notifications/subscribe`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || "Subscription failed");
-  return data;
-};

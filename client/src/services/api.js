@@ -68,18 +68,3 @@ export const landingImageApi = {
   }
 };
 
-export const contactApi = {
-  async submitContact(formData) {
-    const res = await fetch(`${API_BASE_URL}/contact`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message || "Failed to send message");
-    }
-    return data;
-  }
-};
-

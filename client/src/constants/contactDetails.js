@@ -1,5 +1,5 @@
 export const SHOP_NAME = "Study-Hub Publication";
-export const SHOP_ADDRESS = "21 College Street, Kolkata, West Bengal 700073";
+export const SHOP_ADDRESS = "15, Shyamacharan Dey Street, Kolkata - 700073";
 
 const encodedAddress = encodeURIComponent(SHOP_ADDRESS);
 

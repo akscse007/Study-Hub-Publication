@@ -1,14 +1,10 @@
-import "./config/network.js";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
-import { verifySmtpConnection } from "./utils/emailService.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import adminRoutes from "./routes/admin/index.js";
-import enquiryRoutes from "./routes/enquiryRoutes.js";
-import contactRoutes from "./routes/contactRoutes.js";
 import whatsappLeadRoutes from "./routes/whatsappLeadRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
@@ -74,8 +70,6 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/sellers", sellerRoutes);
 app.use("/api/landing-images", landingImageRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("/api/enquiries", publicFormLimiter, enquiryRoutes);
-app.use("/api/contact", publicFormLimiter, contactRoutes);
 app.use("/api/whatsapp-leads", publicFormLimiter, whatsappLeadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingsRoutes);
@@ -92,7 +86,6 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
-    await verifySmtpConnection();
     await connectDB();
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

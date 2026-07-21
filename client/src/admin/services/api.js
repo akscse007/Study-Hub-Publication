@@ -64,12 +64,6 @@ export const adminSellerApi = {
   deleteSeller: (id) => request(`/admin/sellers/${id}`, { method: "DELETE" })
 };
 
-export const enquiryApi = {
-  getEnquiries: () => request("/admin/enquiries"),
-  updateStatus: (id, status) => request(`/admin/enquiries/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }),
-  deleteEnquiry: (id) => request(`/admin/enquiries/${id}`, { method: "DELETE" })
-};
-
 export const whatsAppLeadApi = {
   getLeads: () => request("/admin/whatsapp-leads"),
   updateStatus: (id, status) => request(`/admin/whatsapp-leads/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }),

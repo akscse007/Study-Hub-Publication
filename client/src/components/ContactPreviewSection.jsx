@@ -17,7 +17,7 @@ const ContactPreviewSection = () => {
       viewport={viewportConfig}
     >
       <div className="container">
-        <SectionHeader title="Contact Us / Need Help?" kicker="Get in touch" />
+        <SectionHeader title="Contact Us" kicker="Get in touch" />
         <div className="contact-preview-grid">
           <div className="contact-card">
             <h3>Shop Details</h3>
