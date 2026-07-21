@@ -1,3 +1,4 @@
+import "../config/network.js";
 import "dotenv/config";
 import nodemailer from "nodemailer";
 
