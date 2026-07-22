@@ -40,7 +40,7 @@ export const getBooks = async (req, res, next) => {
 
     const books = await dataQuery;
 
-    if (search && books.length) {
+    if (safeSearch && books.length) {
       const bookIds = books.map((book) => book._id);
       await Book.updateMany({ _id: { $in: bookIds } }, { $inc: { searchCount: 1 } });
       books.forEach((book) => {

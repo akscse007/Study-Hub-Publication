@@ -2,9 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import AdminUser from "../models/AdminUser.js";
 import ActivityLog from "../models/ActivityLog.js";
-
-const JWT_SECRET = process.env.JWT_SECRET || "studyhub_jwt_secret_change_in_production";
-const JWT_EXPIRES_IN = "7d";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/auth.js";
 
 const logActivity = async (action, details) => {
   try {

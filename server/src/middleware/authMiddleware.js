@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import AdminUser from "../models/AdminUser.js";
-
-const JWT_SECRET = process.env.JWT_SECRET || "studyhub_jwt_secret_change_in_production";
+import { JWT_SECRET } from "../config/auth.js";
 
 export const authenticate = async (req, res, next) => {
   try {

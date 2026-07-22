@@ -17,14 +17,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-if (!process.env.JWT_SECRET) {
-  if (IS_PRODUCTION) {
-    console.error("FATAL: JWT_SECRET is not set. Refusing to start in production with the built-in default secret.");
-    process.exit(1);
-  }
-  console.warn("WARNING: JWT_SECRET is not set — using an insecure development default. Set it in server/.env.");
-}
-
 if (IS_PRODUCTION && !process.env.CLIENT_URL) {
   console.error(
     "FATAL: CLIENT_URL is not set. CORS would reject the deployed frontend. Set it to the deployed site URL (e.g. https://your-site.onrender.com)."
@@ -50,6 +42,7 @@ app.use((req, res, next) => {
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Content-Security-Policy", "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
   if (IS_PRODUCTION) {
     res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   }
